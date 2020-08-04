@@ -1,0 +1,4542 @@
+openapi: 3.0.0
+info:
+  title: MyTDS Pipeline Management
+  description: This mock up API is used to mock MyTDS Internal AM & SE, and MyTDS
+    AM & SE Mobile App for Pipeline Management (Alignment Agreement for Buying Episode)
+  contact:
+    email: rannisaks@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/telkomdds/TDSBuyingPipeline/1.0.0
+  description: SwaggerHub API Auto Mocking
+tags:
+- name: integration
+  description: Related to integration with core system
+- name: users mgt
+  description: Related to modul user
+- name: project
+  description: Related to modul project
+- name: general
+  description: Related to modul general
+- name: activity
+  description: Related to modul activity
+- name: lead
+  description: Related to modul lead
+- name: opportunity
+  description: Related to modul opportunity
+paths:
+  /users-management/v2/auth/login:
+    post:
+      tags:
+      - users mgt
+      summary: login for internal telkom
+      description: For organic Telkom use NIK and non-organic or partner use registered
+        email for username
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Login400'
+        "500":
+          description: NOK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Nok500'
+      security:
+      - bearerAuth: []
+  /users-management/v2/refreshtoken:
+    post:
+      tags:
+      - users mgt
+      summary: refresh token for login
+      description: refresh token for login in MyTDS Internal
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshToken'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefreshTokenResponse'
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Login400'
+        "500":
+          description: NOK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Nok500'
+      security:
+      - basicAuth: []
+  /users-management/v2/update/{userId}:
+    put:
+      tags:
+      - users mgt
+      summary: update profile user internal
+      parameters:
+      - name: userId
+        in: path
+        description: input userId
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserUpdate'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserUpdateResponse'
+        "400":
+          description: NOK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Nok400'
+        "401":
+          description: NOK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Nok401'
+        "404":
+          description: not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Nok404'
+        "500":
+          description: NOK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Nok500'
+      security:
+      - bearerAuth: []
+  /users-management/v2/profile:
+    get:
+      tags:
+      - users mgt
+      summary: get user profile in MyTDS internal
+      responses:
+        "200":
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        "404":
+          description: data not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Nok404'
+        "500":
+          description: Internal Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Nok500'
+      security:
+      - bearerAuth: []
+  /opportunities/project/v1:
+    get:
+      tags:
+      - project
+      summary: view list project
+      description: get all list project
+      parameters:
+      - name: size
+        in: query
+        description: input size
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      - name: page
+        in: query
+        description: input page
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      - name: sortBy
+        in: query
+        description: projectTitle / customerAccountName / statusValue / -projectTitle
+          / -customerAccountName / -statusValue
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: projectTitle
+        in: query
+        description: input projectTitle
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectList'
+        "400":
+          description: bad input parameter
+      security:
+      - bearerAuth: []
+  /opportunities/project/v1/pic:
+    get:
+      tags:
+      - project
+      summary: view list pic
+      description: get all list pic
+      parameters:
+      - name: projectId
+        in: query
+        description: input projectId
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: nipnas
+        in: query
+        description: input nipnas
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: integer
+      - name: page
+        in: query
+        description: input page
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      - name: size
+        in: query
+        description: input size
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PicList'
+        "400":
+          description: bad input parameter
+      security:
+      - bearerAuth: []
+    post:
+      tags:
+      - project
+      summary: add new pic
+      description: add new pic to system
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PicBody'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PicResponse'
+        "400":
+          description: invalid input, object invalid
+        "409":
+          description: an existing item already exists
+      security:
+      - bearerAuth: []
+  /opportunities/project/v1/pic/{picId}:
+    get:
+      tags:
+      - project
+      summary: update data pic
+      description: update data pic
+      parameters:
+      - name: picId
+        in: path
+        description: input picId
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PicDetail'
+        "400":
+          description: invalid input, object invalid
+        "409":
+          description: an existing item already exists
+      security:
+      - bearerAuth: []
+    put:
+      tags:
+      - project
+      summary: update data pic
+      description: update data pic
+      parameters:
+      - name: picId
+        in: path
+        description: input picId
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PicUpdateBody'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PicUpdateResponse'
+        "400":
+          description: invalid input, object invalid
+        "409":
+          description: an existing item already exists
+      security:
+      - bearerAuth: []
+    delete:
+      tags:
+      - project
+      summary: delete pic
+      description: delete pic
+      parameters:
+      - name: picId
+        in: path
+        description: input picId
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PicDeleteResponse'
+        "400":
+          description: invalid input, object invalid
+        "409":
+          description: an existing item already exists
+      security:
+      - bearerAuth: []
+  /opportunities/project/v1/update-process/{projectId}:
+    put:
+      tags:
+      - project
+      summary: update project"s process
+      description: update project"s process
+      parameters:
+      - name: projectId
+        in: path
+        description: input projectId
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProcessUpdateBody'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProcessUpdateResponse'
+        "400":
+          description: invalid input, object invalid
+        "409":
+          description: an existing item already exists
+      security:
+      - bearerAuth: []
+  /opportunities/project/v1/update-status/{projectId}:
+    put:
+      tags:
+      - project
+      summary: update project"s status
+      description: update project"s status
+      parameters:
+      - name: projectId
+        in: path
+        description: input projectId
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StatusUpdateBody'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatusUpdateResponse'
+        "400":
+          description: invalid input, object invalid
+        "409":
+          description: an existing item already exists
+      security:
+      - bearerAuth: []
+  /quotations/general/v2/customer-account:
+    get:
+      tags:
+      - general
+      summary: list of customer account V2
+      description: suggest customer account name by typing keyword V2
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CAListV2'
+        "400":
+          description: bad input parameter
+      security:
+      - bearerAuth: []
+  /quotations/general/v1/segments:
+    get:
+      tags:
+      - general
+      summary: list of segment
+      description: get the list of segment
+      parameters:
+      - name: keyword
+        in: query
+        description: get segments
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Segment'
+        "400":
+          description: bad input parameter
+      security:
+      - bearerAuth: []
+  /opportunities/general/v1/upload-file:
+    post:
+      tags:
+      - general
+      summary: add new file
+      description: add new file to system
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/body'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadFileResponse'
+        "400":
+          description: invalid input, object invalid
+        "409":
+          description: an existing item already exists
+      security:
+      - bearerAuth: []
+  /opportunities/general/v1/upload-file/{projectId}:
+    delete:
+      tags:
+      - general
+      summary: delete file
+      description: delete file
+      parameters:
+      - name: projectId
+        in: path
+        description: input project id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: docType
+        in: query
+        description: Activity / Opportunity / Quote / Agreement / Win
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: fileName
+        in: query
+        description: input fileName
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/uploadDeleteResponse'
+        "400":
+          description: invalid input, object invalid
+        "409":
+          description: an existing item already exists
+      security:
+      - bearerAuth: []
+  /opportunities/general/v1/phone-codes:
+    get:
+      tags:
+      - general
+      summary: view list of phone codes
+      description: get all list of phone
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PhoneCodeList'
+        "400":
+          description: bad input parameter
+      security:
+      - bearerAuth: []
+  /opportunities/general/v1/term-of-payment:
+    get:
+      tags:
+      - general
+      summary: view list of term of payment
+      description: get all list of term of payment
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TermOfPaymentList'
+        "400":
+          description: bad input parameter
+      security:
+      - bearerAuth: []
+  /opportunities/general/v1/project-process/{projectId}:
+    get:
+      tags:
+      - general
+      summary: get all list of project process
+      description: get all list of project process
+      parameters:
+      - name: projectId
+        in: path
+        description: input project id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectProcessList'
+        "400":
+          description: bad input parameter
+      security:
+      - bearerAuth: []
+  /opportunities/general/v1/win-factor:
+    get:
+      tags:
+      - general
+      summary: get all list of win factor
+      description: get all list of win factor
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WinFactorList'
+        "400":
+          description: bad input parameter
+      security:
+      - bearerAuth: []
+  /opportunities/general/v1/cancel-factor:
+    get:
+      tags:
+      - general
+      summary: get all list of cancel factor
+      description: get all list of cancel factor
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CancelFactorList'
+        "400":
+          description: bad input parameter
+      security:
+      - bearerAuth: []
+  /opportunities/general/v1/lose-factor:
+    get:
+      tags:
+      - general
+      summary: get all list of lose factor
+      description: get all list of lose factor
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoseFactorList'
+        "400":
+          description: bad input parameter
+      security:
+      - bearerAuth: []
+  /opportunities/lead/v1:
+    get:
+      tags:
+      - lead
+      summary: view list lead
+      description: get all list lead
+      parameters:
+      - name: size
+        in: query
+        description: input size
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      - name: page
+        in: query
+        description: input page
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      - name: customerAccountName
+        in: query
+        description: input customer name
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/leadList'
+        "400":
+          description: bad input parameter
+      security:
+      - bearerAuth: []
+    post:
+      tags:
+      - lead
+      summary: to adding new lead
+      description: create a new lead
+      requestBody:
+        description: add lead form
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/addLeadBody'
+            examples:
+              Mobile:
+                value:
+                  customerAccountName: Lipo Plaza
+                  customerAccountNumber: "0004986732"
+                  nipnas: 1234
+                  segment: BANKING MANAGEMENT SERVICES-1
+                  pic:
+                  - picId: PIC-12801820120
+                    name: Rizka Annisa
+                    duty: AM
+                    phoneNumber: "081515512894"
+                  projectTitle: Pengadaan Barang dan Jasa
+                  projectDescription: Lorem ipsum
+              Web Step 1:
+                value:
+                  step: 1
+                  customerAccountName: Lipo Plaza
+                  customerAccountNumber: "0004986732"
+                  nipnas: 1234
+                  segment: BANKING MANAGEMENT SERVICES-1
+                  pic:
+                  - picId: PIC-12801820120
+                    name: Rizka Annisa
+                    duty: AM
+                    phoneNumber: "081515512894"
+                  projectTitle: ""
+                  projectDescription: ""
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/addLeadResponse'
+              examples:
+                Mobile:
+                  value:
+                    success: true
+                    message: Berhasil membuat lead!
+                    code: 200
+                    data:
+                      projectId: PRO-975059-9302302301
+                      nik: "920136"
+                      role: account_manager
+                      userId: "920136"
+                      customerAccountName: Lipo Plaza
+                      customerAccountNumber: "0004986732"
+                      nipnas: 1234
+                      segment: BANKING MANAGEMENT SERVICES-1
+                      pic:
+                      - picId: PIC-12081209120
+                        name: Rizka Annisa
+                        duty: AM
+                        phoneNumber: "081515512894"
+                      projectTitle: Pengadaan Barang dan Jasa
+                      projectDescription: Lorem ipsum
+                      process: Lead
+                      createdAt: 2019-09-02T09:17:56.533Z
+                      updatedAt: 2019-09-02T09:17:56.533Z
+                      createdBy: Rizka Annisa
+                      updatedBy: Hiya Hiya Hiya
+                Web Step 1:
+                  value:
+                    success: true
+                    message: Berhasil membuat lead!
+                    code: 200
+                    data:
+                      step: 1
+                      projectId: PRO-975059-9302302301
+                      nik: "920136"
+                      role: account_manager
+                      userId: "920136"
+                      customerAccountName: Lipo Plaza
+                      customerAccountNumber: "0004986732"
+                      nipnas: 1234
+                      segment: BANKING MANAGEMENT SERVICES-1
+                      pic:
+                      - picId: PIC-12081209120
+                        name: Rizka Annisa
+                        duty: AM
+                        phoneNumber: "081515512894"
+                      projectTitle: ""
+                      projectDescription: ""
+                      process: Lead
+                      createdAt: 2019-09-02T09:17:56.533Z
+                      updatedAt: 2019-09-02T09:17:56.533Z
+                      createdBy: Rizka Annisa
+                      updatedBy: Hiya Hiya Hiya
+        "400":
+          description: invalid input, object invalid
+        "409":
+          description: an existing item already exists
+      security:
+      - bearerAuth: []
+  /opportunities/lead/v1/{projectId}:
+    get:
+      tags:
+      - lead
+      summary: view all summary of lead
+      description: get all summary of lead
+      parameters:
+      - name: projectId
+        in: path
+        description: input id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/summaryLead'
+        "400":
+          description: bad input parameter
+      security:
+      - bearerAuth: []
+    put:
+      tags:
+      - lead
+      summary: update informasi pelanggan
+      description: update informasi pelanggan
+      parameters:
+      - name: projectId
+        in: path
+        description: input project id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/addLeadBody'
+            examples:
+              Mobile:
+                value:
+                  customerAccountName: Lipo Plaza
+                  customerAccountNumber: "0004986732"
+                  nipnas: 1234
+                  segment: BANKING MANAGEMENT SERVICES-1
+                  pic:
+                  - picId: PIC-129010
+                    name: Rizka Annisa
+                    duty: AM
+                    phoneNumber: "081515512894"
+                  projectTitle: Pengadaan Barang dan Jasa
+                  projectDescription: Lorem ipsum
+              Web Step 1:
+                value:
+                  step: 1
+                  customerAccountName: Lipo Plaza
+                  customerAccountNumber: "0004986732"
+                  nipnas: 1234
+                  segment: BANKING MANAGEMENT SERVICES-1
+                  pic:
+                  - picId: PIC-129010
+                    name: Rizka Annisa
+                    duty: AM
+                    phoneNumber: "081515512894"
+                  projectTitle: ""
+                  projectDescription: ""
+              Web Step 2:
+                value:
+                  step: 2
+                  customerAccountName: ""
+                  customerAccountNumber: ""
+                  nipnas: 0
+                  segment: ""
+                  pic: []
+                  projectTitle: Pengadaan Barang dan Jasa
+                  projectDescription: Lorem ipsum
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LeadUpdateResponse'
+              examples:
+                Mobile:
+                  value:
+                    success: true
+                    message: Berhasil mengubah lead!
+                    code: 200
+                    data:
+                      projectId: PRO-975059-9302302301
+                      nik: "920136"
+                      role: account_manager
+                      userId: "920136"
+                      customerAccountName: Lipo Plaza
+                      customerAccountNumber: "0004986732"
+                      nipnas: 1234
+                      segment: BANKING MANAGEMENT SERVICES-1
+                      pic:
+                      - picId: PIC-129010
+                        name: Rizka Annisa
+                        duty: AM
+                        phoneNumber: "081515512894"
+                      projectTitle: Pengadaan Barang dan Jasa
+                      projectDescription: Lorem ipsum
+                      process: Lead
+                      createdAt: 2019-09-02T09:17:56.533Z
+                      updatedAt: 2019-09-02T09:17:56.533Z
+                      createdBy: Rizka Annisa
+                      updatedBy: Hiya Hiya Hiya
+                Web Step 1:
+                  value:
+                    success: true
+                    message: Berhasil mengubah lead!
+                    code: 200
+                    data:
+                      step: 1
+                      projectId: PRO-975059-9302302301
+                      nik: "920136"
+                      role: account_manager
+                      userId: "920136"
+                      customerAccountName: Lipo Plaza
+                      customerAccountNumber: "0004986732"
+                      nipnas: 1234
+                      segment: BANKING MANAGEMENT SERVICES-1
+                      pic:
+                      - picId: PIC-129010
+                        name: Rizka Annisa
+                        duty: AM
+                        phoneNumber: "081515512894"
+                      projectTitle: ""
+                      projectDescription: ""
+                      process: Lead
+                      createdAt: 2019-09-02T09:17:56.533Z
+                      updatedAt: 2019-09-02T09:17:56.533Z
+                      createdBy: Rizka Annisa
+                      updatedBy: Hiya Hiya Hiya
+                Web Step 2:
+                  value:
+                    success: true
+                    message: Berhasil mengubah lead!
+                    code: 200
+                    data:
+                      step: 2
+                      projectId: PRO-975059-9302302301
+                      nik: "920136"
+                      role: account_manager
+                      userId: "920136"
+                      customerAccountName: ""
+                      customerAccountNumber: ""
+                      nipnas: 0
+                      segment: ""
+                      pic: []
+                      projectTitle: Pengadaan Barang dan Jasa
+                      projectDescription: Lorem ipsum
+                      process: Lead
+                      createdAt: 2019-09-02T09:17:56.533Z
+                      updatedAt: 2019-09-02T09:17:56.533Z
+                      createdBy: Rizka Annisa
+                      updatedBy: Hiya Hiya Hiya
+        "400":
+          description: invalid input, object invalid
+        "409":
+          description: an existing item already exists
+      security:
+      - bearerAuth: []
+  /opportunities/activity/v1:
+    get:
+      tags:
+      - activity
+      summary: add new activitiy
+      description: add new activity to system
+      parameters:
+      - name: size
+        in: query
+        description: input size
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      - name: page
+        in: query
+        description: input page
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      - name: projectId
+        in: query
+        description: input projectId
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivityList'
+        "400":
+          description: invalid input, object invalid
+        "409":
+          description: an existing item already exists
+      security:
+      - bearerAuth: []
+    post:
+      tags:
+      - activity
+      summary: add new activitiy
+      description: add new activity to system
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActivityBody'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivityResponse'
+        "400":
+          description: invalid input, object invalid
+        "409":
+          description: an existing item already exists
+      security:
+      - bearerAuth: []
+  /opportunities/activity/v1/{activityId}:
+    get:
+      tags:
+      - activity
+      summary: get detail activity
+      description: get detail activity
+      parameters:
+      - name: activityId
+        in: path
+        description: input activity id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivityDetail'
+        "400":
+          description: invalid input, object invalid
+        "409":
+          description: an existing item already exists
+      security:
+      - bearerAuth: []
+    put:
+      tags:
+      - activity
+      summary: update activity
+      description: update activity
+      parameters:
+      - name: activityId
+        in: path
+        description: input activity id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActivityUpdateBody'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivityUpdateResponse'
+        "400":
+          description: invalid input, object invalid
+        "409":
+          description: an existing item already exists
+      security:
+      - bearerAuth: []
+    delete:
+      tags:
+      - activity
+      summary: delete activity
+      description: delete activity
+      parameters:
+      - name: activityId
+        in: path
+        description: input activity id
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivityDeleteResponse'
+        "400":
+          description: invalid input, object invalid
+        "409":
+          description: an existing item already exists
+      security:
+      - bearerAuth: []
+  /opportunities/activity/v1/type:
+    get:
+      tags:
+      - activity
+      summary: view list type
+      description: get all list type
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivityTypeList'
+        "400":
+          description: bad input parameter
+      security:
+      - bearerAuth: []
+  /opportunities/activity/v1/status:
+    get:
+      tags:
+      - activity
+      summary: view list status
+      description: get all list status
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivityStatusList'
+        "400":
+          description: bad input parameter
+      security:
+      - bearerAuth: []
+  /opportunities/activity/v1/bulk/{projectId}:
+    put:
+      tags:
+      - activity
+      summary: update bundling activity
+      description: update bundling activity
+      parameters:
+      - name: projectId
+        in: path
+        description: input projectId
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ActivityBulkUpdateBody'
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ActivityBulkUpdateResponse'
+        "400":
+          description: invalid input, object invalid
+        "409":
+          description: an existing item already exists
+      security:
+      - bearerAuth: []
+  /opportunities/v1:
+    get:
+      tags:
+      - opportunity
+      summary: view list of opportunity
+      description: get all list of opportunityd
+      parameters:
+      - name: size
+        in: query
+        description: input size
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      - name: page
+        in: query
+        description: input page
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpporList'
+        "400":
+          description: bad input parameter
+      security:
+      - bearerAuth: []
+    post:
+      tags:
+      - opportunity
+      summary: add new opportunity
+      description: add new opportunity to the system
+      requestBody:
+        description: opportunity form
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpporBody'
+            examples:
+              Mobile Create from New Opportunity:
+                value:
+                  projectId: ""
+                  customerAccountName: Lipo Plaza
+                  customerAccountNumber: "0004703302"
+                  nipnas: 1234
+                  segment: ES BANKING MANAGEMENT SERVICES-1
+                  pic:
+                  - picId: PIC-280912801
+                    name: Rizka Annisa
+                    duty: AM
+                    phoneNumber: "08181929182"
+                  projectTitle: Pengadaan Barang
+                  solutionCategory: Beli Putus
+                  percentWinning: 10
+                  termOfPayment: OTC Prepaid
+                  estimateOTCPrepaidValue: 280000000
+                  estimateSubscribeStartDate: 2011-10-05T00:00:00.000Z
+                  estimateDeliveryPeriod:
+                    month: 1
+                    day: 7
+                  isIncludeDelivery: true
+                  estimateSubscribePeriod: 12
+                  estimateValue: 280000000
+                  contractCategory: Own Channel
+                  projectDescription: Lorem ipsum dolor opportunity
+                  opportunityFiles:
+                  - fileId: MED-108201
+                    fileName: PRE-123_1.pdf
+              Mobile ToP - OTC Prepaid:
+                value:
+                  projectId: PRO-975059-9302302301
+                  projectTitle: Pengadaan Barang
+                  solutionCategory: Beli Putus
+                  percentWinning: 10
+                  termOfPayment: OTC Prepaid
+                  estimateOTCPrepaidValue: 280000000
+                  estimateSubscribeStartDate: 2011-10-05T00:00:00.000Z
+                  estimateDeliveryPeriod:
+                    month: 1
+                    day: 7
+                  isIncludeDelivery: true
+                  estimateSubscribePeriod: 12
+                  estimateValue: 280000000
+                  contractCategory: Own Channel
+                  projectDescription: Lorem ipsum dolor opportunity
+                  opportunityFiles:
+                  - fileId: MED-108201
+                    fileName: PRE-123_1.pdf
+              Mobile ToP - OTC Postpaid:
+                value:
+                  projectId: PRO-975059-9302302301
+                  projectTitle: Pengadaan Barang
+                  solutionCategory: Beli Putus
+                  percentWinning: 10
+                  termOfPayment: OTC Postpaid
+                  estimateOTCPostpaidValue: 280000000
+                  estimateSubscribeStartDate: 2011-10-05T00:00:00.000Z
+                  estimateDeliveryPeriod:
+                    month: 1
+                    day: 7
+                  isIncludeDelivery: true
+                  estimateSubscribePeriod: 12
+                  estimateValue: 280000000
+                  contractCategory: Own Channel
+                  projectDescription: Lorem ipsum dolor opportunity
+                  opportunityFiles:
+                  - fileId: MED-108201
+                    fileName: PRE-123_1.pdf
+              Mobile ToP - OTC dan Recurring Bulanan:
+                value:
+                  projectId: PRO-975059-9302302301
+                  projectTitle: Pengadaan Barang
+                  solutionCategory: Beli Putus
+                  percentWinning: 10
+                  termOfPayment: OTC dan Recurring Bulanan
+                  estimateOTCValue: 280000000
+                  estimateRecurringValue: 280000000
+                  estimateSubscribeStartDate: 2011-10-05T00:00:00.000Z
+                  estimateDeliveryPeriod:
+                    month: 1
+                    day: 7
+                  isIncludeDelivery: true
+                  estimateSubscribePeriod: 12
+                  estimateValue: 280000000
+                  contractCategory: Own Channel
+                  projectDescription: Lorem ipsum dolor opportunity
+                  opportunityFiles:
+                  - fileId: MED-108201
+                    fileName: PRE-123_1.pdf
+              Mobile ToP - Recurring Bulanan:
+                value:
+                  projectId: PRO-975059-9302302301
+                  projectTitle: Pengadaan Barang
+                  solutionCategory: Beli Putus
+                  percentWinning: 10
+                  termOfPayment: Recurring Bulanan
+                  estimateRecurringValue: 280000000
+                  estimateSubscribeStartDate: 2011-10-05T00:00:00.000Z
+                  estimateDeliveryPeriod:
+                    month: 1
+                    day: 7
+                  isIncludeDelivery: true
+                  estimateSubscribePeriod: 12
+                  estimateValue: 280000000
+                  contractCategory: Own Channel
+                  projectDescription: Lorem ipsum dolor opportunity
+                  opportunityFiles:
+                  - fileId: MED-108201
+                    fileName: PRE-123_1.pdf
+              Mobile ToP - Termin:
+                value:
+                  projectId: PRO-975059-9302302301
+                  projectTitle: Pengadaan Barang
+                  solutionCategory: Beli Putus
+                  percentWinning: 10
+                  termOfPayment: Termin
+                  termin:
+                  - estimatePaymentDate: 2011-10-05T00:00:00.000Z
+                    estimateValue: 280000000
+                  - estimatePaymentDate: 2011-11-05T00:00:00.000Z
+                    estimateValue: 200000000
+                  estimateSubscribeStartDate: 2011-10-05T00:00:00.000Z
+                  estimateDeliveryPeriod:
+                    month: 1
+                    day: 7
+                  isIncludeDelivery: true
+                  estimateSubscribePeriod: 12
+                  estimateValue: 280000000
+                  contractCategory: Own Channel
+                  projectDescription: Lorem ipsum dolor opportunity
+                  opportunityFiles:
+                  - fileId: MED-108201
+                    fileName: PRE-123_1.pdf
+              Mobile ToP - Usage Based:
+                value:
+                  projectId: PRO-975059-9302302301
+                  projectTitle: Pengadaan Barang
+                  solutionCategory: Beli Putus
+                  percentWinning: 10
+                  termOfPayment: Usage Based
+                  estimateUsageValue: 280000000
+                  usage: 2
+                  estimateSubscribeStartDate: 2011-10-05T00:00:00.000Z
+                  estimateDeliveryPeriod:
+                    month: 1
+                    day: 7
+                  isIncludeDelivery: true
+                  estimateSubscribePeriod: 12
+                  estimateValue: 280000000
+                  contractCategory: Own Channel
+                  projectDescription: Lorem ipsum dolor opportunity
+                  opportunityFiles:
+                  - fileId: MED-108201
+                    fileName: PRE-123_1.pdf
+              Web Create from Lead (Step 1):
+                value:
+                  projectId: PRO-975059-291820102
+                  customerAccountName: Lipo Plaza
+                  customerAccountNumber: "0004703302"
+                  nipnas: 1234
+                  segment: ES BANKING MANAGEMENT SERVICES-1
+                  pic:
+                  - picId: PIC-21028012
+                    name: Rizka Annisa
+                    duty: AM
+                    phoneNumber: "08181929182"
+                  projectTitle: Pengadaan Barang
+                  solutionCategory: ""
+                  percentWinning: 0
+                  termOfPayment: ""
+                  estimateSubscribeStartDate: ""
+                  estimateDeliveryPeriod:
+                    month: 0
+                    day: 0
+                  estimateSubscribePeriod: 0
+                  estimateValue: 0
+                  contractCategory: ""
+                  projectDescription: ""
+                  opportunityFiles: []
+              Web Create from New Opportunity (Step 1):
+                value:
+                  step: 1
+                  projectId: ""
+                  customerAccountName: Lipo Plaza
+                  customerAccountNumber: "0004703302"
+                  nipnas: 1234
+                  segment: ES BANKING MANAGEMENT SERVICES-1
+                  pic:
+                  - picId: PIC-21028012
+                    name: Rizka Annisa
+                    duty: AM
+                    phoneNumber: "08181929182"
+                  projectTitle: ""
+                  solutionCategory: ""
+                  percentWinning: 0
+                  termOfPayment: ""
+                  estimateSubscribeStartDate: ""
+                  estimateDeliveryPeriod:
+                    month: 0
+                    day: 0
+                  estimateSubscribePeriod: 0
+                  estimateValue: 0
+                  contractCategory: ""
+                  projectDescription: ""
+                  opportunityFiles: []
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpporResponse'
+              examples:
+                Mobile Create from New Opportunity:
+                  value:
+                    success: true
+                    message: Sukses membuat Opportunity!
+                    code: 200
+                    data:
+                      projectId: PRO-975059-9302302301
+                      nik: "920136"
+                      role: account manager
+                      userId: "920136"
+                      process: Opportunity
+                      customerAccountName: Lipo Plaza
+                      customerAccountNumber: "0004703302"
+                      nipnas: 1234
+                      segment: ES BANKING MANAGEMENT SERVICES-1
+                      pic:
+                      - picId: PIC-2801021
+                        name: Rizka Annisa
+                        duty: AM
+                        phoneNumber: "08181929182"
+                      projectTitle: Pengadaan Barang
+                      solutionCategory: Beli Putus
+                      percentWinning: 10
+                      estimateValue: 280000000
+                      estimateSubscribeStartDate: 2011-10-05T00:00:00.000Z
+                      estimateDeliveryPeriod:
+                        month: 1
+                        day: 7
+                      isIncludeDelivery: true
+                      estimateSubscribePeriod: 12
+                      isPartner: false
+                      contractCategory: Own Channel
+                      projectDescription: Lorem ipsum dolor opportunity
+                      opportunityFiles:
+                      - fileId: MED-108201
+                        fileName: PRE-123_1.pdf
+                        fileUrl: http://minio.com
+                      createdAt: 2019-09-02T09:17:56.533Z
+                      updatedAt: 2019-09-02T09:17:56.533Z
+                      createdBy: Rizka Annisa
+                      updatedBy: Hiya Hiya Hiya
+                Mobile ToP - OTC Prepaid:
+                  value:
+                    success: true
+                    message: Sukses membuat Opportunity!
+                    code: 200
+                    data:
+                      projectId: PRO-975059-9302302301
+                      nik: "920136"
+                      role: account manager
+                      userId: "920136"
+                      process: Opportunity
+                      projectTitle: Pengadaan Barang
+                      solutionCategory: Beli Putus
+                      percentWinning: 10
+                      termOfPayment: OTC Prepaid
+                      estimateOTCPrepaidValue: 280000000
+                      estimateSubscribeStartDate: 2011-10-05T00:00:00.000Z
+                      estimateDeliveryPeriod:
+                        month: 1
+                        day: 7
+                      isIncludeDelivery: true
+                      estimateSubscribePeriod: 12
+                      estimateValue: 280000000
+                      isPartner: false
+                      contractCategory: Own Channel
+                      projectDescription: Lorem ipsum dolor opportunity
+                      opportunityFiles:
+                      - fileId: MED-108201
+                        fileName: PRE-123_1.pdf
+                        fileUrl: http://minio.com
+                      createdAt: 2019-09-02T09:17:56.533Z
+                      updatedAt: 2019-09-02T09:17:56.533Z
+                      createdBy: Rizka Annisa
+                      updatedBy: Hiya Hiya Hiya
+                Mobile ToP - OTC Postpaid:
+                  value:
+                    success: true
+                    message: Sukses membuat Opportunity!
+                    code: 200
+                    data:
+                      projectId: PRO-975059-9302302301
+                      nik: "920136"
+                      role: account manager
+                      userId: "920136"
+                      process: Opportunity
+                      projectTitle: Pengadaan Barang
+                      solutionCategory: Beli Putus
+                      percentWinning: 10
+                      termOfPayment: OTC Postpaid
+                      estimateOTCPostpaidValue: 280000000
+                      estimateSubscribeStartDate: 2011-10-05T00:00:00.000Z
+                      estimateDeliveryPeriod:
+                        month: 1
+                        day: 7
+                      isIncludeDelivery: true
+                      estimateSubscribePeriod: 12
+                      estimateValue: 280000000
+                      isPartner: false
+                      contractCategory: Own Channel
+                      projectDescription: Lorem ipsum dolor opportunity
+                      opportunityFiles:
+                      - fileId: MED-108201
+                        fileName: PRE-123_1.pdf
+                        fileUrl: http://minio.com
+                      createdAt: 2019-09-02T09:17:56.533Z
+                      updatedAt: 2019-09-02T09:17:56.533Z
+                      createdBy: Rizka Annisa
+                      updatedBy: Hiya Hiya Hiya
+                Mobile ToP - OTC dan Recurring Bulanan:
+                  value:
+                    success: true
+                    message: Sukses membuat Opportunity!
+                    code: 200
+                    data:
+                      projectId: PRO-975059-9302302301
+                      nik: "920136"
+                      role: account manager
+                      userId: "920136"
+                      process: Opportunity
+                      projectTitle: Pengadaan Barang
+                      solutionCategory: Beli Putus
+                      percentWinning: 10
+                      termOfPayment: OTC dan Recurring Bulanan
+                      estimateOTCValue: 280000000
+                      estimateRecurringValue: 280000000
+                      estimateSubscribeStartDate: 2011-10-05T00:00:00.000Z
+                      estimateDeliveryPeriod:
+                        month: 1
+                        day: 7
+                      isIncludeDelivery: true
+                      estimateSubscribePeriod: 12
+                      estimateValue: 280000000
+                      isPartner: false
+                      contractCategory: Own Channel
+                      projectDescription: Lorem ipsum dolor opportunity
+                      opportunityFiles:
+                      - fileId: MED-108201
+                        fileName: PRE-123_1.pdf
+                        fileUrl: http://minio.com
+                      createdAt: 2019-09-02T09:17:56.533Z
+                      updatedAt: 2019-09-02T09:17:56.533Z
+                      createdBy: Rizka Annisa
+                      updatedBy: Hiya Hiya Hiya
+                Mobile ToP - Recurring Bulanan:
+                  value:
+                    success: true
+                    message: Sukses membuat Opportunity!
+                    code: 200
+                    data:
+                      projectId: PRO-975059-9302302301
+                      nik: "920136"
+                      role: account manager
+                      userId: "920136"
+                      process: Opportunity
+                      projectTitle: Pengadaan Barang
+                      solutionCategory: Beli Putus
+                      percentWinning: 10
+                      termOfPayment: Recurring Bulanan
+                      estimateRecurringValue: 280000000
+                      estimateSubscribeStartDate: 2011-10-05T00:00:00.000Z
+                      estimateDeliveryPeriod:
+                        month: 1
+                        day: 7
+                      isIncludeDelivery: true
+                      estimateSubscribePeriod: 12
+                      estimateValue: 280000000
+                      isPartner: false
+                      contractCategory: Own Channel
+                      projectDescription: Lorem ipsum dolor opportunity
+                      opportunityFiles:
+                      - fileId: MED-108201
+                        fileName: PRE-123_1.pdf
+                        fileUrl: http://minio.com
+                      createdAt: 2019-09-02T09:17:56.533Z
+                      updatedAt: 2019-09-02T09:17:56.533Z
+                      createdBy: Rizka Annisa
+                      updatedBy: Hiya Hiya Hiya
+                Mobile ToP - Termin:
+                  value:
+                    success: true
+                    message: Sukses membuat Opportunity!
+                    code: 200
+                    data:
+                      projectId: PRO-975059-9302302301
+                      nik: "920136"
+                      role: account manager
+                      userId: "920136"
+                      process: Opportunity
+                      projectTitle: Pengadaan Barang
+                      solutionCategory: Beli Putus
+                      percentWinning: 10
+                      termOfPayment: Termin
+                      termin:
+                      - estimatePaymentDate: 2011-10-05T00:00:00.000Z
+                        estimateValue: 280000000
+                      - estimatePaymentDate: 2011-11-05T00:00:00.000Z
+                        estimateValue: 200000000
+                      estimateSubscribeStartDate: 2011-10-05T00:00:00.000Z
+                      estimateDeliveryPeriod:
+                        month: 1
+                        day: 7
+                      isIncludeDelivery: true
+                      estimateSubscribePeriod: 12
+                      estimateValue: 280000000
+                      isPartner: false
+                      contractCategory: Own Channel
+                      projectDescription: Lorem ipsum dolor opportunity
+                      opportunityFiles:
+                      - fileId: MED-108201
+                        fileName: PRE-123_1.pdf
+                        fileUrl: http://minio.com
+                      createdAt: 2019-09-02T09:17:56.533Z
+                      updatedAt: 2019-09-02T09:17:56.533Z
+                      createdBy: Rizka Annisa
+                      updatedBy: Hiya Hiya Hiya
+                Mobile ToP - Usage Based:
+                  value:
+                    success: true
+                    message: Sukses membuat Opportunity!
+                    code: 200
+                    data:
+                      projectId: PRO-975059-9302302301
+                      nik: "920136"
+                      role: account manager
+                      userId: "920136"
+                      process: Opportunity
+                      projectTitle: Pengadaan Barang
+                      solutionCategory: Beli Putus
+                      percentWinning: 10
+                      termOfPayment: Usage Based
+                      estimateUsageValue: 280000000
+                      usage: 2
+                      estimateSubscribeStartDate: 2011-10-05T00:00:00.000Z
+                      estimateDeliveryPeriod:
+                        month: 1
+                        day: 7
+                      isIncludeDelivery: true
+                      estimateSubscribePeriod: 12
+                      estimateValue: 280000000
+                      isPartner: false
+                      contractCategory: Own Channel
+                      projectDescription: Lorem ipsum dolor opportunity
+                      opportunityFiles:
+                      - fileId: MED-108201
+                        fileName: PRE-123_1.pdf
+                        fileUrl: http://minio.com
+                      createdAt: 2019-09-02T09:17:56.533Z
+                      updatedAt: 2019-09-02T09:17:56.533Z
+                      createdBy: Rizka Annisa
+                      updatedBy: Hiya Hiya Hiya
+                Web Create from Lead (Step 1):
+                  value:
+                    success: true
+                    message: Sukses membuat Opportunity!
+                    code: 200
+                    data:
+                      projectId: PRO-975059-9302302301
+                      nik: "920136"
+                      role: account manager
+                      userId: "920136"
+                      process: Opportunity
+                      customerAccountName: Lipo Plaza
+                      customerAccountNumber: "0004703302"
+                      nipnas: 1234
+                      segment: ES BANKING MANAGEMENT SERVICES-1
+                      pic:
+                      - picId: PIC-2801021
+                        name: Rizka Annisa
+                        duty: AM
+                        phoneNumber: "08181929182"
+                      projectTitle: Pengadaan Barang
+                      solutionCategory: ""
+                      percentWinning: 0
+                      estimateValue: 0
+                      estimateSubscribeStartDate: ""
+                      estimateDeliveryPeriod:
+                        month: 0
+                        day: 0
+                      estimateSubscribePeriod: 0
+                      contractCategory: ""
+                      projectDescription: Lorem ipsum dolor opportunity
+                      opportunityFiles: []
+                      createdAt: 2019-09-02T09:17:56.533Z
+                      updatedAt: 2019-09-02T09:17:56.533Z
+                      createdBy: Rizka Annisa
+                      updatedBy: Hiya Hiya Hiya
+                Web Create from New Opportunity (Step 1):
+                  value:
+                    success: true
+                    message: Sukses membuat Opportunity!
+                    code: 200
+                    data:
+                      projectId: PRO-975059-9302302301
+                      nik: "920136"
+                      role: account manager
+                      userId: "920136"
+                      process: Opportunity
+                      customerAccountName: Lipo Plaza
+                      customerAccountNumber: "0004703302"
+                      nipnas: 1234
+                      segment: ES BANKING MANAGEMENT SERVICES-1
+                      pic:
+                      - picId: PIC-2801021
+                        name: Rizka Annisa
+                        duty: AM
+                        phoneNumber: "08181929182"
+                      projectTitle: ""
+                      solutionCategory: ""
+                      percentWinning: 0
+                      estimateValue: 0
+                      estimateSubscribeStartDate: ""
+                      estimateDeliveryPeriod:
+                        month: 0
+                        day: 0
+                      estimateSubscribePeriod: 0
+                      contractCategory: ""
+                      projectDescription: ""
+                      opportunityFiles: []
+                      createdAt: 2019-09-02T09:17:56.533Z
+                      updatedAt: 2019-09-02T09:17:56.533Z
+                      createdBy: Rizka Annisa
+                      updatedBy: Hiya Hiya Hiya
+        "400":
+          description: invalid input, object invalid
+        "409":
+          description: an existing item already exists
+      security:
+      - bearerAuth: []
+  /opportunities/v1/{projectId}:
+    get:
+      tags:
+      - opportunity
+      summary: view detail of opportunity
+      description: get detail of opportunityd
+      parameters:
+      - name: projectId
+        in: path
+        description: showing based on projectId
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpporDetail'
+        "400":
+          description: bad input parameter
+      security:
+      - bearerAuth: []
+    put:
+      tags:
+      - opportunity
+      summary: update opportunity
+      description: update opportunity to the system
+      parameters:
+      - name: projectId
+        in: path
+        description: showing based on projectId
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        description: opportunity form
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OpporUpdateBody'
+            examples:
+              Mobile:
+                value:
+                  projectTitle: Pengadaan Barang
+                  solutionCategory: Beli Putus
+                  percentWinning: 10
+                  termOfPayment: OTC Prepaid
+                  estimateOTCPrepaidValue: 280000000
+                  estimateSubscribeStartDate: 2011-10-05T00:00:00.000Z
+                  estimateDeliveryPeriod:
+                    month: 1
+                    day: 7
+                  isIncludeDelivery: true
+                  estimateSubscribePeriod: 12
+                  estimateValue: 280000000
+                  contractCategory: Own Channel
+                  projectDescription: Lorem ipsum dolor opportunity
+                  opportunityFiles:
+                  - fileId: MED-108201
+                    fileName: PRE-123_1.pdf
+              Web Step 1:
+                value:
+                  step: 1
+                  projectId: PRO-975059-2018291
+                  customerAccountName: Lipo Plaza
+                  customerAccountNumber: "0004703302"
+                  nipnas: 1234
+                  segment: ES BANKING MANAGEMENT SERVICES-1
+                  pic:
+                  - picId: PIC-21028012
+                    name: Rizka Annisa
+                    duty: AM
+                    phoneNumber: "08181929182"
+                  projectTitle: ""
+                  solutionCategory: ""
+                  percentWinning: 0
+                  termOfPayment: ""
+                  estimateSubscribeStartDate: ""
+                  estimateDeliveryPeriod:
+                    month: 0
+                    day: 0
+                  estimateSubscribePeriod: 0
+                  estimateValue: 0
+                  contractCategory: ""
+                  projectDescription: ""
+                  opportunityFiles: []
+              Web Step 2:
+                value:
+                  step: 2
+                  projectId: PRO-975059-2018291
+                  customerAccountName: Lipo Plaza
+                  customerAccountNumber: "0004703302"
+                  nipnas: 1234
+                  segment: ES BANKING MANAGEMENT SERVICES-1
+                  pic:
+                  - picId: PIC-21028012
+                    name: Rizka Annisa
+                    duty: AM
+                    phoneNumber: "08181929182"
+                  projectTitle: Pengadaan Barang
+                  solutionCategory: Beli Putus
+                  percentWinning: 10
+                  termOfPayment: OTC Prepaid
+                  estimateOTCPrepaidValue: 280000000
+                  estimateSubscribeStartDate: 2011-10-05T00:00:00.000Z
+                  estimateDeliveryPeriod:
+                    month: 1
+                    day: 7
+                  isIncludeDelivery: true
+                  estimateSubscribePeriod: 12
+                  estimateValue: 280000000
+                  contractCategory: Own Channel
+                  projectDescription: Lorem ipsum dolor opportunity
+                  opportunityFiles:
+                  - fileId: MED-108201
+                    fileName: PRE-123_1.pdf
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpporUpdateResponse'
+              examples:
+                Mobile:
+                  value:
+                    success: true
+                    message: Sukses mengubah Opportunity!
+                    code: 200
+                    data:
+                      projectId: PRO-975059-9302302301
+                      nik: "920136"
+                      role: account manager
+                      userId: "920136"
+                      process: Opportunity
+                      customerAccountName: Lipo Plaza
+                      customerAccountNumber: "0004703302"
+                      nipnas: 1234
+                      segment: ES BANKING MANAGEMENT SERVICES-1
+                      pic:
+                      - picId: PIC-2801021
+                        name: Rizka Annisa
+                        duty: AM
+                        phoneNumber: "08181929182"
+                      projectTitle: Pengadaan Barang
+                      solutionCategory: Beli Putus
+                      percentWinning: 10
+                      estimateValue: 280000000
+                      estimateSubscribeStartDate: 2011-10-05T00:00:00.000Z
+                      estimateDeliveryPeriod:
+                        month: 1
+                        day: 7
+                      isIncludeDelivery: true
+                      estimateSubscribePeriod: 12
+                      isPartner: false
+                      contractCategory: Own Channel
+                      projectDescription: Lorem ipsum dolor opportunity
+                      opportunityFiles:
+                      - fileId: MED-108201
+                        fileName: PRE-123_1.pdf
+                        fileUrl: http://minio.com
+                      createdAt: 2019-09-02T09:17:56.533Z
+                      updatedAt: 2019-09-02T09:17:56.533Z
+                      createdBy: Rizka Annisa
+                      updatedBy:
+                        date: 2019-09-02T09:17:56.533Z
+                        fullName: Sidik Hadiwijaya
+                        nik: 975059
+                        role: account_manager
+                        userId: "21982012091210"
+                Web Step 1:
+                  value:
+                    success: true
+                    message: Sukses mengubah Opportunity!
+                    code: 200
+                    data:
+                      step: 1
+                      projectId: PRO-975059-2018291
+                      customerAccountName: Lipo Plaza
+                      customerAccountNumber: "0004703302"
+                      nipnas: 1234
+                      segment: ES BANKING MANAGEMENT SERVICES-1
+                      pic:
+                      - picId: PIC-21028012
+                        name: Rizka Annisa
+                        duty: AM
+                        phoneNumber: "08181929182"
+                      projectTitle: ""
+                      solutionCategory: ""
+                      percentWinning: 0
+                      termOfPayment: ""
+                      estimateSubscribeStartDate: ""
+                      estimateDeliveryPeriod:
+                        month: 0
+                        day: 0
+                      estimateSubscribePeriod: 0
+                      estimateValue: 0
+                      contractCategory: ""
+                      projectDescription: ""
+                      opportunityFiles: []
+                      createdAt: 2019-09-02T09:17:56.533Z
+                      updatedAt: 2019-09-02T09:17:56.533Z
+                      createdBy: Rizka Annisa
+                      updatedBy:
+                        date: 2019-09-02T09:17:56.533Z
+                        fullName: Sidik Hadiwijaya
+                        nik: 975059
+                        role: account_manager
+                        userId: "21982012091210"
+                Web Step 2:
+                  value:
+                    success: true
+                    message: Sukses mengubah Opportunity!
+                    code: 200
+                    data:
+                      step: 2
+                      projectId: PRO-975059-2018291
+                      customerAccountName: Lipo Plaza
+                      customerAccountNumber: "0004703302"
+                      nipnas: 1234
+                      segment: ES BANKING MANAGEMENT SERVICES-1
+                      pic:
+                      - picId: PIC-21028012
+                        name: Rizka Annisa
+                        duty: AM
+                        phoneNumber: "08181929182"
+                      projectTitle: Pengadaan Barang
+                      solutionCategory: Beli Putus
+                      percentWinning: 10
+                      estimateValue: 280000000
+                      estimateSubscribeStartDate: 2011-10-05T00:00:00.000Z
+                      estimateDeliveryPeriod:
+                        month: 1
+                        day: 7
+                      isIncludeDelivery: true
+                      estimateSubscribePeriod: 12
+                      isPartner: false
+                      contractCategory: Own Channel
+                      projectDescription: Lorem ipsum dolor opportunity
+                      opportunityFiles:
+                      - fileId: MED-108201
+                        fileName: PRE-123_1.pdf
+                        fileUrl: http://minio.com
+                      createdAt: 2019-09-02T09:17:56.533Z
+                      updatedAt: 2019-09-02T09:17:56.533Z
+                      createdBy: Rizka Annisa
+                      updatedBy:
+                        date: 2019-09-02T09:17:56.533Z
+                        fullName: Sidik Hadiwijaya
+                        nik: 975059
+                        role: account_manager
+                        userId: "21982012091210"
+        "400":
+          description: invalid input, object invalid
+        "409":
+          description: an existing item already exists
+      security:
+      - bearerAuth: []
+components:
+  schemas:
+    Login:
+      type: object
+      properties:
+        username:
+          type: string
+          example: hosy8ddsa@gmail.com
+        password:
+          maxLength: 20
+          minLength: 6
+          type: string
+          format: password
+          example: agusrachman12
+        firebaseToken:
+          type: string
+          example: firebaseToken
+        accessTokenExpired:
+          type: integer
+          example: 2000
+    LoginResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        code:
+          type: string
+          example: "200"
+        message:
+          type: string
+          example: Your Request Has Been Processed
+        data:
+          $ref: '#/components/schemas/LoginResponse_data'
+    RefreshToken:
+      type: object
+      properties:
+        refreshToken:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiI5N2IzMzE5My00M2ZmLTRlNTgtOTEyNC1iM2E5YjlmNzJjMzQiLCJleHAiOjE1OTQ4MDQ1ODksImlhdCI6MTU5MjIxMjU4OSwiaXNzIjoidGVsa29tZGV2IiwianRpIjoiNjJlODk1ZmEtNjA0Ni00NDM3LTkyM2EtN2M5N2JhNTdiZjFhIiwic3ViIjoiY2FlMTgzZGUtZjBjYy00Njk3LTgxMjYtMDgzNTc0N2FlYTkwIn0.DQuz0A4ARYLbbkkhPq5x-_Rl5EMsBPdto7wP-wK6opM
+        accessTokenExpired:
+          type: integer
+          example: 1
+    RefreshTokenResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: Ok
+        data:
+          $ref: '#/components/schemas/RefreshTokenResponse_data'
+    UserUpdate:
+      type: object
+      properties:
+        applicationType:
+          type: array
+          items:
+            type: string
+            enum:
+            - web
+            - app
+        createdAt:
+          type: string
+          example: 2020-01-27T07:33:22.364Z
+        updatedAt:
+          type: string
+        createdBy:
+          type: string
+        updatedBy:
+          type: string
+        isActive:
+          type: boolean
+          example: true
+        metaData:
+          $ref: '#/components/schemas/UserUpdate_metaData'
+        segment:
+          type: string
+          example: BMS-2
+        customerAccountNumber:
+          type: string
+        statusInvitation:
+          type: string
+    UserUpdateResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: Sukses update user
+        data:
+          $ref: '#/components/schemas/UserUpdateResponse_data'
+    UserResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        code:
+          type: integer
+          example: 200
+        message:
+          type: string
+          example: User ditemukan
+        data:
+          $ref: '#/components/schemas/UserUpdateResponse_data'
+    ProjectList:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Berhasil mendapatkan daftar Project!
+        code:
+          type: integer
+          example: 200
+        data:
+          type: array
+          example:
+          - projectId: PRO-975059-9302302301
+            lopId: ""
+            projectTitle: Pengadaan Barang dan Jasa
+            customerAccountName: Lipo Plaza
+            process: Lead
+            stage: ""
+            status:
+              statusId: LEAD-1
+              statusValue: Draft
+            updatedAt: 2019-09-02T09:17:56.533Z
+          - projectId: PRO-975059-9302302302
+            lopId: ""
+            projectTitle: Pengadaan Elektronik
+            customerAccountName: Bank Mandiri
+            process: Opportunity
+            stage: ""
+            status:
+              statusId: OPR-1
+              statusValue: Draft
+            updatedAt: 2019-09-02T09:17:56.533Z
+          - projectId: PRO-975059-9302302302
+            lopId: LOP-975059-9302302302
+            projectTitle: Pengadaan Server
+            customerAccountName: Pemerintahan Kota Surabaya
+            process: Quote
+            stage: SPH
+            status:
+              statusId: QUO-1
+              statusValue: Draft
+            updatedAt: 2019-09-02T09:17:56.533Z
+          items:
+            $ref: '#/components/schemas/detailListLead'
+        meta:
+          $ref: '#/components/schemas/ProjectList_meta'
+    PicList:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Sukses mendapatkan daftar pic!
+        code:
+          type: integer
+          example: 200
+        data:
+          type: array
+          example:
+          - picId: PIC-92180120
+            name: Rizka Annisa
+            duty: Account Manager
+            phoneNumber: "081515512894"
+            source: NCX
+            isChoosen: true
+          - picId: PIC-92180121
+            name: Yeo Seung Ho
+            duty: Sales Engineer
+            phoneNumber: "081515512895"
+            source: MyTDS
+            isChoosen: false
+          items:
+            type: string
+        meta:
+          $ref: '#/components/schemas/PicList_meta'
+    PicBody:
+      type: object
+      properties:
+        nipnas:
+          type: integer
+          example: 1208090
+        name:
+          type: string
+          example: Rizka Annisa
+        duty:
+          type: string
+          example: Account Manager
+        phoneNumber:
+          type: string
+          example: "081515512894"
+    PicResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Sukses membuat pic baru!
+        code:
+          type: integer
+          example: 200
+        data:
+          $ref: '#/components/schemas/PicResponse_data'
+    PicDetail:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Sukses mendapatkan detail pic!
+        code:
+          type: integer
+          example: 200
+        data:
+          $ref: '#/components/schemas/PicDetail_data'
+    PicUpdateBody:
+      type: object
+      properties:
+        nipnas:
+          type: integer
+          example: 1208090
+        name:
+          type: string
+          example: Rizka Annisa
+        duty:
+          type: string
+          example: Account Manager
+        phoneNumber:
+          type: string
+          example: "081515512894"
+    PicUpdateResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Sukses mengubah pic!
+        code:
+          type: integer
+          example: 200
+        data:
+          $ref: '#/components/schemas/PicResponse_data'
+    PicDeleteResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Sukses menghapus data pic!
+        code:
+          type: integer
+          example: 200
+        data:
+          type: object
+          example: {}
+    ProcessUpdateBody:
+      type: object
+      properties:
+        process:
+          type: string
+          example: Quote / Agreement / Order
+        files:
+          type: array
+          example:
+          - fileId: MED-108201
+            fileName: PRE-123_1.pdf
+          items:
+            $ref: '#/components/schemas/ProcessUpdateBody_files'
+    ProcessUpdateResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Berhasil mengubah proses proyek!
+        code:
+          type: integer
+          example: 200
+        data:
+          $ref: '#/components/schemas/ProcessUpdateResponse_data'
+    StatusUpdateBody:
+      type: object
+      properties:
+        status:
+          type: string
+          example: Win / Cancel / Lose
+        factor:
+          type: string
+          example: Customer Intimacy
+        notes:
+          type: string
+          example: Lorem ipsum
+        files:
+          type: array
+          example:
+          - fileId: MED-108201
+            fileName: PRE-123_1.pdf
+          items:
+            $ref: '#/components/schemas/ProcessUpdateBody_files'
+    StatusUpdateResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Berhasil mengubah status proyek!
+        code:
+          type: integer
+          example: 200
+        data:
+          $ref: '#/components/schemas/StatusUpdateResponse_data'
+    CAListV2:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: array
+          example:
+          - nipnas: 4600005
+            customerAccountNumber: "0004600005"
+            customerAccountName: PT. WIRA ARTA TELEMATIKA
+            segment:
+              segmentKey: BMS-1
+            location: Jawa Barat
+            witel: Jawa Barat
+            divre: 2
+          - nipnas: 2916519
+            customerAccountNumber: "0002916519"
+            customerAccountName: BANK MANDIRI
+            segment:
+              segmentKey: ""
+            location: KW PAPUA/JAYAPURA
+            witel: KW PAPUA/JAYAPURA
+            divre: 7
+          - nipnas: 1236
+            customerAccountNumber: "0004703304"
+            customerAccountName: PT PLN
+            segment:
+              egmentKey: FMS
+            location: KW PAPUA/JAYAPURA
+            witel: KW PAPUA/JAYAPURA
+            divre: 7
+          - nipnas: 1237
+            customerAccountNumber: "0004703305"
+            customerAccountName: Pegadaian Provinsi Jawa Timur
+            segment:
+              segmentKey: FMS
+            location: Jawa Timur
+            witel: Jawa Timur
+            divre: 5
+          items:
+            type: string
+        message:
+          type: string
+          example: Success get list of Customer Account
+        code:
+          type: string
+    Segment:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: array
+          example:
+          - division: DES
+            segmentKey: BMS-1
+            segment: BANKING MANAGEMENT SERVICES-1
+          - division: DES
+            segmentKey: BMS-2
+            segment: BANKING MANAGEMENT SERVICES-2
+          - division: DES
+            segmentKey: EMS
+            segment: EDUCATION MANAGEMENT SERVICES
+          - division: DES
+            segmentKey: ERS
+            segment: ENERGY & RESOURCES SERVICES
+          - division: DES
+            segmentKey: FMS
+            segment: FINANCIAL MANAGEMENT SERVICES
+          - division: DES
+            segmentKey: HWS
+            segment: HEALTHCARE & WELFARE SERVICES
+          - division: DES
+            segmentKey: IBS
+            segment: INFORMATION & BUSINESS SERVICES
+          - division: DES
+            segmentKey: MAS
+            segment: MANUFACTURING & AGRIBUSINESS SERVICES
+          - division: DES
+            segmentKey: MLS
+            segment: MARITIME & LOGISTICS SERVICES
+          - division: DES
+            segmentKey: MCS
+            segment: MEDIA & COMMUNICATION SERVICES
+          - division: DES
+            segmentKey: PCS
+            segment: PROPERTY & CONSTRUCTION SERVICES
+          - division: DES
+            segmentKey: THS
+            segment: TOURISM & HOSPITALITY SERVICES
+          - division: DES
+            segmentKey: TDS
+            segment: TRADING & DISTRIBUTION SERVICES
+          - division: DES
+            segmentKey: TMS
+            segment: TRANSPORTATION MANAGEMENT SERVICES
+          - division: DBS
+            segmentKey: CCS
+            segment: COMMUNITY & COMMERCE SERVICE
+          - division: DBS
+            segmentKey: HBS
+            segment: HOSPITALITY BUSINESS SERVICE
+          - division: DBS
+            segmentKey: LBS
+            segment: LOGISTIC BUSINESS SERVICE
+          - division: DBS
+            segmentKey: MBS
+            segment: MANUFACTURE BUSINESS SERVICE
+          - division: DBS
+            segmentKey: TBS
+            segment: TRADING BUSINESS SERVICE
+          - division: DGS
+            segmentKey: CGS
+            segment: CENTRAL GOVERNMENT SERVICE
+          - division: DGS
+            segmentKey: GAS
+            segment: GOVERNMENT AGENCY SERVICE
+          - division: DGS
+            segmentKey: LGS
+            segment: LOCAL GOVERNMENT SERVICE
+          - division: DGS
+            segmentKey: MPS
+            segment: MILITARY & POLICE SERVICE
+          items:
+            type: string
+        message:
+          type: string
+          example: Success get list of Segment
+        code:
+          type: string
+          example: "200"
+    PhoneCodeList:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Berhasil mendapatkan daftar nomor telepon negara!
+        code:
+          type: integer
+          example: 200
+        data:
+          type: array
+          example:
+          - countryName: Afghanistan
+            countryCode: AF
+            code: +93
+          - countryName: Indonesia
+            countryCode: IDN
+            code: +62
+          items:
+            $ref: '#/components/schemas/PhoneCodeList_data'
+    TermOfPaymentList:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Berhasil mendapatkan daftar term of payment!
+        code:
+          type: integer
+          example: 200
+        data:
+          type: array
+          example:
+          - topId: 1
+            topName: OTC Prepaid
+          - topId: 2
+            topName: OTC Postpaid
+          - topId: 3
+            topName: OTC dan Recurring Bulanan
+          - topId: 4
+            topName: Recurring Bulanan
+          - topId: 5
+            topName: Termin
+          - topId: 6
+            topName: Usage Based
+          items:
+            $ref: '#/components/schemas/TermOfPaymentList_data'
+    ProjectProcessList:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Berhasil mendapatkan daftar proses!
+        code:
+          type: integer
+          example: 200
+        data:
+          $ref: '#/components/schemas/ProjectProcessList_data'
+    WinFactorList:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Berhasil mendapatkan daftar faktor kemenangan proyek!
+        code:
+          type: integer
+          example: 200
+        data:
+          type: array
+          example:
+          - factorId: 1
+            factor: Customer Intimacy
+          - factorId: 2
+            factor: Total Solution Offering
+          - factorId: 3
+            factor: Competitive Price
+          - factorId: 4
+            factor: Techniacal Lead
+          - factorId: 99
+            factor: Lainnya
+          items:
+            $ref: '#/components/schemas/WinFactorList_data'
+    CancelFactorList:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Berhasil mendapatkan daftar faktor proyek dibatalkan!
+        code:
+          type: integer
+          example: 200
+        data:
+          type: array
+          example:
+          - factorId: 1
+            factor: Budget
+          - factorId: 2
+            factor: Teknis
+          - factorId: 3
+            factor: Permintaan Customer
+          - factorId: 99
+            factor: Lainnya
+          items:
+            $ref: '#/components/schemas/WinFactorList_data'
+    LoseFactorList:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Berhasil mendapatkan daftar faktor kekalahan proyek!
+        code:
+          type: integer
+          example: 200
+        data:
+          type: array
+          example:
+          - factorId: 1
+            factor: Harga
+          - factorId: 2
+            factor: Teknis
+          - factorId: 3
+            factor: Permintaan Customer
+          - factorId: 4
+            factor: Pemilihan Mitra/Distributor
+          - factorId: 5
+            factor: Influencer
+          - factorId: 99
+            factor: Lainnya
+          items:
+            $ref: '#/components/schemas/WinFactorList_data'
+    addLeadBody:
+      type: object
+      properties:
+        customerAccountName:
+          type: string
+          example: Lipo Plaza
+        customerAccountNumber:
+          type: string
+          example: "0008219284"
+        nipnas:
+          type: string
+          example: "1234"
+        segment:
+          type: string
+          example: ES BANKING MANAGEMENT SERVICES-1
+        pic:
+          type: array
+          example:
+          - name: Rizka Annisa
+            duty: AM
+            phoneNumber: "08181929182"
+          items:
+            type: string
+        projectTitle:
+          type: string
+          example: Pengadaan Barang dan Jasa
+        projectDescription:
+          type: string
+          example: Lorem ipsum
+    addLeadResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Berhasil membuat lead!
+        code:
+          type: integer
+          example: 200
+        data:
+          $ref: '#/components/schemas/addLeadResponse_data'
+    leadList:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Berhasil mendapatkan daftar lead!
+        code:
+          type: integer
+          example: 200
+        data:
+          type: array
+          example:
+          - projectId: PRO-975059-9302302301
+            projectTitle: Pengadaan Barang dan Jasa
+            customerAccountName: Lipo Plaza
+            nipnas: 1234
+            createdAt: 2020-02-27T06:51:53.452Z
+            updatedAt: 2020-02-27T06:51:53.452Z
+          - projectId: PRO-975059-9302302302
+            projectTitle: Pengadaan Elektronik
+            customerAccountName: Lipo Plaza
+            nipnas: 1234
+            createdAt: 2020-02-27T06:51:53.452Z
+            updatedAt: 2020-02-27T06:51:53.452Z
+          - projectId: PRO-975059-9302302303
+            projectTitle: Pengadaan Server
+            customerAccountName: Bank Mandiri
+            nipnas: 1235
+            createdAt: 2020-02-27T06:51:53.452Z
+            updatedAt: 2020-02-27T06:51:53.452Z
+          - projectId: PRO-975059-9302302304
+            projectTitle: Proyek Pembangunan Masjid
+            customerAccountName: Bank Mandiri
+            nipnas: 1235
+            createdAt: 2020-02-27T06:51:53.452Z
+            updatedAt: 2020-02-27T06:51:53.452Z
+          - projectId: PRO-975059-9302302305
+            projectTitle: Proyek Pembangunan Taman
+            customerAccountName: Pemerintah Kota DKI
+            nipnas: 1236
+            createdAt: 2020-02-27T06:51:53.452Z
+            updatedAt: 2020-02-27T06:51:53.452Z
+          items:
+            $ref: '#/components/schemas/detailListLead'
+        meta:
+          $ref: '#/components/schemas/PicList_meta'
+    detailListLead:
+      type: object
+      properties:
+        projectId:
+          type: string
+        projectTitle:
+          type: string
+        customerAccountName:
+          type: string
+        nipnas:
+          type: string
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+    summaryLead:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Berhasil melihat ringkasan lead!
+        code:
+          type: integer
+          example: 200
+        data:
+          $ref: '#/components/schemas/summaryLead_data'
+    LeadUpdateResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Berhasil mengubah lead!
+        code:
+          type: integer
+          example: 200
+        data:
+          $ref: '#/components/schemas/LeadUpdateResponse_data'
+    dataActivities:
+      type: object
+      properties:
+        activityId:
+          type: string
+        activityDate:
+          type: string
+        activityStatus:
+          type: string
+        activityType:
+          type: string
+        activityDescription:
+          type: string
+        activityPhotos:
+          type: array
+          items:
+            type: string
+    ActivityList:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Berhasil mendapatkan daftar Aktivitas!
+        code:
+          type: integer
+          example: 200
+        data:
+          type: array
+          example:
+          - activityId: ACT-975059-9302302301
+            projectId: PRO-975059-9302302301
+            activityStartDate: 2011-10-05T00:00:00.000Z
+            activityType: Appointment
+            activityNotes: Lorem ipsum
+            activityPhotos:
+            - fileId: MED-108201
+              fileName: DSC-19201.jpg
+              fileUrl: http://minio.com
+            - fileId: MED-108202
+              fileName: ktp-bambang.jpg
+              fileUrl: http://minio-2.com
+          - activityId: ACT-975059-9302302302
+            projectId: PRO-975059-9302302302
+            activityStartDate: 2011-10-05T00:00:00.000Z
+            activityType: Kunjungan
+            activityNotes: Lorem ipsum
+            activityPhotos:
+            - fileId: MED-108203
+              fileName: DSC-19201.jpg
+              fileUrl: http://minio.com
+            - fileId: MED-108204
+              fileName: ktp-bambang.jpg
+              fileUrl: http://minio-2.com
+          items:
+            $ref: '#/components/schemas/ActivityList_data'
+        meta:
+          $ref: '#/components/schemas/PicList_meta'
+    ActivityBody:
+      type: object
+      properties:
+        projectId:
+          type: string
+        nipnas:
+          type: integer
+          example: 0
+        customerAccountName:
+          type: string
+        segment:
+          type: string
+        activityStartDate:
+          type: string
+          example: 2011-10-05T00:00:00.000Z
+        activityEndDate:
+          type: string
+          example: 2011-10-05T00:00:00.000Z
+        activityType:
+          type: string
+          example: Appointment
+        activityNotes:
+          type: string
+          example: Lorem ipsum
+        activityPhotos:
+          type: array
+          example:
+          - photoName: MED-108202
+            photoLink: http://minio.com
+          - photoName: MED-108203
+            photoLink: http://minio.com
+          items:
+            type: string
+    ActivityResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Berhasil membuat Aktivitas!
+        code:
+          type: integer
+          example: 200
+        data:
+          $ref: '#/components/schemas/ActivityResponse_data'
+    ActivityDetail:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Berhasil melihat detail Aktivitas!
+        code:
+          type: integer
+          example: 200
+        data:
+          $ref: '#/components/schemas/ActivityResponse_data'
+    ActivityUpdateBody:
+      type: object
+      properties:
+        projectId:
+          type: string
+        activityStartDate:
+          type: string
+          example: 2011-10-05T00:00:00.000Z
+        activityEndDate:
+          type: string
+          example: 2011-10-05T00:00:00.000Z
+        activityType:
+          type: string
+          example: Done
+        activityNotes:
+          type: string
+          example: Lorem ipsum
+        activityPhotos:
+          type: array
+          example:
+          - photoName: MED-108202
+            photoLink: http://minio.com
+          - photoName: MED-108203
+            photoLink: http://minio.com
+          items:
+            $ref: '#/components/schemas/ProcessUpdateBody_files'
+    ActivityUpdateResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Berhasil mengubah Aktivitas!
+        code:
+          type: integer
+          example: 200
+        data:
+          $ref: '#/components/schemas/ActivityUpdateResponse_data'
+    ActivityDeleteResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Berhasil menghapus Aktivitas!
+        code:
+          type: integer
+          example: 200
+        data:
+          type: object
+          example: {}
+    ActivityTypeList:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Berhasil mendapatkan daftar tipe activity!
+        code:
+          type: integer
+          example: 200
+        data:
+          type: array
+          example:
+          - activityTypeId: 1
+            activityType: Appoinment
+          - activityTypeId: 2
+            activityType: Video Conference
+          - activityTypeId: 3
+            activityType: Meeting
+          - activityTypeId: 4
+            activityType: Call
+          - activityTypeId: 5
+            activityType: Email
+          items:
+            $ref: '#/components/schemas/detailListLead'
+    ActivityStatusList:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Berhasil mendapatkan daftar status activity!
+        code:
+          type: integer
+          example: 200
+        data:
+          type: array
+          example:
+          - activityStatusId: 1
+            activityStatus: Canceled
+          - activityStatusId: 2
+            activityStatus: Declined
+          - activityStatusId: 3
+            activityStatus: Done
+          - activityStatusId: 4
+            activityStatus: Draft
+          - activityStatusId: 5
+            activityStatus: In Progress
+          items:
+            $ref: '#/components/schemas/detailListLead'
+    ActivityBulkUpdateBody:
+      type: array
+      example:
+      - activityId: ACT-975059-9302302301
+        activityStartDate: 2011-10-05T00:00:00.000Z
+        activityEndDate: 2011-10-05T00:00:00.000Z
+        activityType: Rapat
+        activityNotes: Lorem ipsum
+        activityPhotos:
+        - photoName: PRE-123_1.pdf
+          photoLink: http://minio.com
+      - activityId: ""
+        activityStartDate: 2020-10-05T00:00:00.000Z
+        activityEndDate: 2020-10-05T00:00:00.000Z
+        activityType: Kunjungan
+        activityNotes: Lorem ipsum
+        activityPhotos:
+        - photoName: PRE-123_1.pdf
+          photoLink: http://minio.com
+      items:
+        type: string
+    ActivityBulkUpdateResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Berhasil mengubah bundling Aktivitas!
+        code:
+          type: integer
+          example: 200
+        data:
+          type: array
+          example:
+          - activityId: ACT-975059-9302302301
+            activityStartDate: 2011-10-05T00:00:00.000Z
+            activityEndDate: 2011-10-05T00:00:00.000Z
+            activityType: Rapat
+            activityNotes: Lorem ipsum
+            activityPhotos:
+            - photoName: PRE-123_1.pdf
+              photoLink: http://minio.com
+            createdAt: 2019-09-02T09:17:56.533Z
+            updatedAt: ""
+            createdBy: Rizka Annisa
+            updatedBy: ""
+          - activityId: ACT-975059-9302302302
+            activityStartDate: 2020-10-05T00:00:00.000Z
+            activityEndDate: 2020-10-05T00:00:00.000Z
+            activityType: Kunjungan
+            activityNotes: Lorem ipsum
+            activityPhotos:
+            - photoName: PRE-123_1.pdf
+              photoLink: http://minio.com
+            createdAt: 2019-09-02T09:17:56.533Z
+            updatedAt: ""
+            createdBy: Rizka Annisa
+            updatedBy: ""
+          items:
+            type: string
+    UploadFileResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Berhasil mengunggah file!
+        code:
+          type: integer
+          example: 200
+        data:
+          $ref: '#/components/schemas/UploadFileResponse_data'
+    uploadDeleteResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Berhasil menghapus file!
+        code:
+          type: integer
+          example: 200
+        data:
+          type: object
+          example: {}
+    OpporBody:
+      type: object
+      properties:
+        projectId:
+          type: string
+          example: PRO-975059-9302302301
+        projectTitle:
+          type: string
+          example: Pengadaan Barang
+        approachedBy:
+          type: string
+          example: General Manager
+        projectCharacteristic:
+          type: string
+          example: Baru
+        opportunityCategory:
+          type: string
+          example: Mahal
+        solutionCategory:
+          type: string
+          example: Beli Putus
+        confidenceWinning:
+          type: string
+          example: Low
+        estimateValue:
+          type: integer
+          example: 280000000
+        estimateSubscribeStartDate:
+          type: string
+          example: 2011-10-05T00:00:00.000Z
+        estimateDeliveryPeriod:
+          type: integer
+          example: 2
+        estimateSubscribePeriod:
+          type: integer
+          example: 12
+        isPartner:
+          type: boolean
+          example: true
+        projectDescription:
+          type: string
+          example: Lorem ipsum dolor opportunity
+        opportunityFiles:
+          type: array
+          example:
+          - fileId: MED-108201
+            fileName: PRE-123_1.pdf
+          items:
+            $ref: '#/components/schemas/ProcessUpdateBody_files'
+    OpporResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Sukses membuat Opportunity!
+        code:
+          type: integer
+          example: 200
+        data:
+          $ref: '#/components/schemas/OpporResponse_data'
+    OpporList:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Berhasil mendapatkan daftar Opportunity!
+        code:
+          type: integer
+          example: 200
+        data:
+          type: array
+          example:
+          - projectId: PRO-975059-9302302301
+            lopId: LOP-975059-9302302301
+            projectTitle: Pengadaan Barang dan Jasa
+            customerAccountName: Lipo Plaza
+            nipnas: 1234
+            estimateValue: 5000000
+            createdAt: 2020-02-27T06:51:53.452Z
+            updatedAt: 2020-02-27T06:51:53.452Z
+          - projectId: PRO-975059-9302302302
+            lopId: LOP-975059-9302302302
+            projectTitle: Pengadaan Barang dan Jasa Eletronik
+            customerAccountName: Bank Mandiri
+            nipnas: 1235
+            estimateValue: 7250000
+            createdAt: 2020-03-27T06:51:53.452Z
+            updatedAt: 2020-03-27T06:51:53.452Z
+          - projectId: PRO-975059-9302302303
+            lopId: LOP-975059-9302302303
+            projectTitle: Pengadaan Server
+            customerAccountName: Bank BCA Finance
+            nipnas: 1236
+            estimateValue: 12250000
+            createdAt: 2020-03-27T06:51:53.452Z
+            updatedAt: 2020-03-27T06:51:53.452Z
+          items:
+            $ref: '#/components/schemas/OpporList_data'
+        meta:
+          $ref: '#/components/schemas/PicList_meta'
+    OpporDetail:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Berhasil melihat Ringkasan Opportunity!
+        code:
+          type: integer
+          example: 200
+        data:
+          $ref: '#/components/schemas/OpporDetail_data'
+    OpporUpdateBody:
+      type: object
+      properties:
+        projectId:
+          type: string
+          example: PRO-975059-9302302301
+        projectTitle:
+          type: string
+          example: Pengadaan Barang
+        solutionCategory:
+          type: string
+          example: Beli Putus
+        percentWinning:
+          type: integer
+          example: 10
+        termOfPayment:
+          type: string
+          example: OTC Prepaid
+        estimateOTCPrepaidValue:
+          type: integer
+          example: 280000000
+        estimateSubscribeStartDate:
+          type: string
+          example: 2011-10-05T00:00:00.000Z
+        estimateDeliveryPeriod:
+          type: integer
+          example: 2
+        estimateSubscribePeriod:
+          type: integer
+          example: 12
+        estimateValue:
+          type: integer
+          example: 280000000
+        contractCategory:
+          type: string
+          example: Own Channel
+        projectDescription:
+          type: string
+          example: Lorem ipsum dolor opportunity
+        opportunityFiles:
+          type: array
+          example:
+          - fileId: MED-108201
+            fileName: PRE-123_1.pdf
+          items:
+            $ref: '#/components/schemas/ProcessUpdateBody_files'
+    OpporUpdateResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: Sukses mengubah Opportunity!
+        code:
+          type: integer
+          example: 200
+        data:
+          $ref: '#/components/schemas/OpporUpdateResponse_data'
+    Login400:
+      properties:
+        success:
+          type: boolean
+          example: false
+        code:
+          type: integer
+          example: 400
+        message:
+          type: string
+          example: Your account is not active
+    Nok400:
+      properties:
+        success:
+          type: boolean
+          example: false
+        code:
+          type: integer
+          example: 400
+        message:
+          type: string
+          example: Bad Request
+    Nok404:
+      properties:
+        success:
+          type: boolean
+          example: false
+        code:
+          type: integer
+          example: 404
+        message:
+          type: string
+          example: user not found
+        data:
+          type: object
+          example: {}
+    Nok401:
+      properties:
+        success:
+          type: boolean
+          example: false
+        code:
+          type: integer
+          example: 401
+        message:
+          type: string
+          example: Authentication Information is Missing or Invalid
+    Nok500:
+      properties:
+        success:
+          type: boolean
+          example: false
+        code:
+          type: integer
+          example: 500
+        message:
+          type: string
+          example: System fault
+    body:
+      type: object
+      properties:
+        projectId:
+          type: string
+        docType:
+          type: string
+          example: Activity / Opportunity / Quote / Agreement / Win / Lose
+        file:
+          type: string
+          format: binary
+    LoginResponse_data_role_apps:
+      properties:
+        appId:
+          type: string
+        appName:
+          type: string
+    LoginResponse_data_role:
+      type: object
+      properties:
+        roleId:
+          type: string
+          example: account_manager
+        roleName:
+          type: string
+          example: Account Manager
+        roleChilds:
+          type: array
+          example: []
+          items:
+            type: string
+        apps:
+          type: array
+          example:
+          - appId: catalog
+            appName: Catalog
+          - appId: buying
+            appName: Buying
+          - appId: complex
+            appName: Complex
+          - appId: assurancee
+            appName: Assurance
+          - appId: delivery
+            appName: Delivery
+          items:
+            $ref: '#/components/schemas/LoginResponse_data_role_apps'
+    LoginResponse_data:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTE5LCJlbWFpbCI6ImFuZHJlYXMuZ3VtYWxhckBnbWFpbC5jb20iLCJpYXQiOjE1NDEwNTE2MTksImV4cCI6MTU0MTEzODAxOX0.Y0HJejsNYfXQHmNhc7YjHOAPrUUjNunJeLyKF5zHkVo
+        refreshToken:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTE5LCJlbWFpbCI6ImFuZHJlYXMuZ3VtYWxhckBnbWFpbC5jb20iLCJpYXQiOjE1NDEwNTE2MTksImV4cCI6MTU0MTEzODAxOX0.Y0HJejsNYfXQHmNhc7YjHOAPrUUjNunJeLyKF5zHkVo
+        accessTokenExpiresIn:
+          type: integer
+          example: 120000
+        refreshTokenExpiresIn:
+          type: integer
+          example: 2592000
+        subscribe:
+          type: array
+          example:
+          - tds_am_develop_4600005
+          - tds_am_develop_2920223
+          - tds_am_catalog_develop_
+          items:
+            type: string
+        role:
+          $ref: '#/components/schemas/LoginResponse_data_role'
+        photo:
+          type: string
+          example: http://minio.com
+        fullName:
+          type: string
+          example: SIDIK HADIWIJAYA
+        sub:
+          type: string
+          example: cae183de-f0cc-4697-8126-0835747aea90
+        companyId:
+          type: string
+          example: "1000"
+        ratingDate:
+          type: string
+          example: 2020-04-17T10:32:36.697Z
+        ratingStatus:
+          type: boolean
+          example: false
+    RefreshTokenResponse_data:
+      type: object
+      properties:
+        accessToken:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiI5N2IzMzE5My00M2ZmLTRlNTgtOTEyNC1iM2E5YjlmNzJjMzQiLCJleHAiOjE1OTQ4MDQ1ODksImlhdCI6MTU5MjIxMjU4OSwiaXNzIjoidGVsa29tZGV2IiwianRpIjoiNjJlODk1ZmEtNjA0Ni00NDM3LTkyM2EtN2M5N2JhNTdiZjFhIiwic3ViIjoiY2FlMTgzZGUtZjBjYy00Njk3LTgxMjYtMDgzNTc0N2FlYTkwIn0.DQuz0A4ARYLbbkkhPq5x-_Rl5EMsBPdto7wP-wK6opM
+        refreshToken:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiI5N2IzMzE5My00M2ZmLTRlNTgtOTEyNC1iM2E5YjlmNzJjMzQiLCJleHAiOjE1OTQ4MDQ1ODksImlhdCI6MTU5MjIxMjU4OSwiaXNzIjoidGVsa29tZGV2IiwianRpIjoiNjJlODk1ZmEtNjA0Ni00NDM3LTkyM2EtN2M5N2JhNTdiZjFhIiwic3ViIjoiY2FlMTgzZGUtZjBjYy00Njk3LTgxMjYtMDgzNTc0N2FlYTkwIn0.DQuz0A4ARYLbbkkhPq5x-_Rl5EMsBPdto7wP-wK6opM
+        accessTokenExpiresIn:
+          type: integer
+          example: 60
+        refreshTokenExpiresIn:
+          type: integer
+          example: 2592000
+    UserUpdate_metaData_company:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        category:
+          type: string
+          example: NON TELKOM GROUP
+        subCategory:
+          type: string
+    UserUpdate_metaData:
+      properties:
+        fullName:
+          type: string
+          example: REYNALDO JOHANES
+        location:
+          type: string
+          example: SURABAYA
+        phoneNumber:
+          type: string
+          example: "082139239328"
+        company:
+          $ref: '#/components/schemas/UserUpdate_metaData_company'
+        ccHandled:
+          type: array
+          example:
+          - nipnas: 4600005
+            corporateClientName: PT. WIRA ARTA TELEMATIKA
+            segment: BMS-1
+            location: ""
+            witel: ""
+            divre: ""
+            startHandled: ""
+            endHandled: ""
+            ccRemote: MAIN
+          - nipnas: 2920223
+            corporateClientName: BANK PERMATA (BANK BALI)
+            segment: BMS-2
+            location: jakarta
+            witel: KW JAKARTA SELATAN
+            divre: "2"
+            startHandled: ""
+            endHandled: ""
+            ccRemote: MAIN
+          items:
+            type: string
+        divisionCode:
+          type: string
+          example: DIT-DDB
+        division:
+          type: string
+          example: DIREKTORAT DIGITAL BUSINESS
+        unit:
+          type: string
+          example: CHAPTER DEVELOPER
+        subUnit:
+          type: string
+          example: DIT DIGITAL BUSINESS (DDB)/DEPT DIGITAL & NEXT BUSINESS/CHAPTER
+            DEVELOPER
+        jobTitle:
+          type: string
+          example: JUNIOR DEVELOPER
+        photo:
+          type: string
+          example: http://minio.com
+        nipnas:
+          type: integer
+          example: 0
+        role:
+          $ref: '#/components/schemas/LoginResponse_data_role'
+    UserUpdateResponse_data_metaData_company:
+      properties:
+        id:
+          type: string
+          example: "1000"
+        name:
+          type: string
+          example: TELKOM INDONESIA
+        category:
+          type: string
+          example: INTERNAL TELKOM
+        subCategory:
+          type: string
+          example: CFD
+    UserUpdateResponse_data_metaData:
+      properties:
+        nik:
+          type: string
+          example: "960051"
+        email:
+          type: string
+          example: 960051@telkom.co.id
+        fullName:
+          type: string
+          example: REYNALDO JOHANES
+        location:
+          type: string
+          example: SURABAYA
+        phoneNumber:
+          type: string
+          example: "082139239328"
+        company:
+          $ref: '#/components/schemas/UserUpdateResponse_data_metaData_company'
+        ccHandled:
+          type: array
+          example:
+          - nipnas: 4600005
+            corporateClientName: PT. WIRA ARTA TELEMATIKA
+            segment: BMS-1
+            location: ""
+            witel: ""
+            divre: ""
+            startHandled: ""
+            endHandled: ""
+            ccRemote: MAIN
+          - nipnas: 2920223
+            corporateClientName: BANK PERMATA (BANK BALI)
+            segment: BMS-2
+            location: jakarta
+            witel: KW JAKARTA SELATAN
+            divre: "2"
+            startHandled: ""
+            endHandled: ""
+            ccRemote: MAIN
+          items:
+            type: string
+        divisionCode:
+          type: string
+          example: DIT-DDB
+        division:
+          type: string
+          example: DIREKTORAT DIGITAL BUSINESS
+        unit:
+          type: string
+          example: CHAPTER DEVELOPER
+        subUnit:
+          type: string
+          example: DIT DIGITAL BUSINESS (DDB)/DEPT DIGITAL & NEXT BUSINESS/CHAPTER
+            DEVELOPER
+        jobTitle:
+          type: string
+          example: JUNIOR DEVELOPER
+        photo:
+          type: string
+          example: http://minio.com
+        nipnas:
+          type: integer
+          example: 0
+        role:
+          $ref: '#/components/schemas/LoginResponse_data_role'
+    UserUpdateResponse_data_atasan:
+      type: object
+      properties:
+        nik:
+          type: string
+          example: "740081"
+        nama:
+          type: string
+          example: ANDRI QIANTORI, Ph.D.
+        posisi:
+          type: string
+          example: HEAD OF CHAPTER DEVELOPER
+        objidposisi:
+          type: string
+          example: "40398331"
+    UserUpdateResponse_data:
+      properties:
+        nik:
+          type: string
+          example: "97059"
+        userId:
+          type: string
+          example: cae183de-f0cc-4697-8126-0835747aea90
+        email:
+          type: string
+          example: 975059@telkom.co.id
+        password:
+          type: string
+          format: byte
+        salt:
+          type: string
+          format: byte
+        applicationType:
+          type: array
+          items:
+            type: string
+            enum:
+            - web
+            - app
+        createdAt:
+          type: string
+          example: 2020-01-27T07:33:22.364Z
+        updatedAt:
+          type: string
+        createdBy:
+          type: string
+        updatedBy:
+          type: string
+        needApproval:
+          type: boolean
+          example: true
+        isActive:
+          type: boolean
+          example: true
+        metaData:
+          $ref: '#/components/schemas/UserUpdateResponse_data_metaData'
+        segment:
+          type: string
+          example: BMS-2
+        customerAccountNumber:
+          type: string
+        firebaseToken:
+          type: string
+        statusInvitation:
+          type: string
+        atasan:
+          $ref: '#/components/schemas/UserUpdateResponse_data_atasan'
+        nikAm:
+          type: string
+        ratingDate:
+          type: string
+          example: 2020-04-17T10:32:36.697Z
+        ratingStatus:
+          type: boolean
+          example: false
+    ProjectList_meta:
+      type: object
+      properties:
+        page:
+          type: integer
+          example: 1
+        size:
+          type: integer
+          example: 2
+        totalPage:
+          type: integer
+          example: 1
+        totalData:
+          type: integer
+          example: 2
+    PicList_meta:
+      type: object
+      properties:
+        page:
+          type: integer
+          example: 1
+        size:
+          type: integer
+          example: 5
+        totalPage:
+          type: integer
+          example: 1
+        totalData:
+          type: integer
+          example: 5
+    PicResponse_data:
+      type: object
+      properties:
+        nipnas:
+          type: integer
+          example: 1208090
+        picId:
+          type: string
+          example: PIC-98109120
+        name:
+          type: string
+          example: Rizka Annisa
+        duty:
+          type: string
+          example: Account Manager
+        phoneNumber:
+          type: string
+          example: "081515512894"
+    PicDetail_data:
+      type: object
+      properties:
+        picId:
+          type: string
+          example: PIC-82918201
+        nipnas:
+          type: integer
+          example: 1208090
+        name:
+          type: string
+          example: Rizka Annisa
+        duty:
+          type: string
+          example: Account Manager
+        phoneNumber:
+          type: string
+          example: "081515512894"
+        source:
+          type: string
+          example: NCX
+    ProcessUpdateBody_files:
+      properties:
+        fileId:
+          type: string
+        fileName:
+          type: string
+    ProcessUpdateResponse_data_files:
+      properties:
+        fileId:
+          type: string
+        fileName:
+          type: string
+        fileUrl:
+          type: string
+    ProcessUpdateResponse_data:
+      type: object
+      properties:
+        projectId:
+          type: string
+          example: PRO-975059-9302302301
+        process:
+          type: string
+          example: Quote
+        files:
+          type: array
+          example:
+          - fileId: MED-108201
+            fileName: PRE-123_1.pdf
+            fileUrl: http://minio.com
+          items:
+            $ref: '#/components/schemas/ProcessUpdateResponse_data_files'
+    StatusUpdateResponse_data:
+      type: object
+      properties:
+        status:
+          type: string
+          example: Win / Cancel / Lose
+        factor:
+          type: string
+          example: Customer Intimacy
+        notes:
+          type: string
+          example: Lorem ipsum
+        files:
+          type: array
+          example:
+          - fileId: MED-108201
+            fileName: PRE-123_1.pdf
+            fileUrl: http://minio.com
+          items:
+            $ref: '#/components/schemas/ProcessUpdateResponse_data_files'
+    PhoneCodeList_data:
+      properties:
+        countryName:
+          type: string
+        countryCode:
+          type: string
+        code:
+          type: string
+    TermOfPaymentList_data:
+      properties:
+        topId:
+          type: integer
+        topName:
+          type: string
+    ProjectProcessList_data:
+      type: object
+      properties:
+        processId:
+          type: integer
+          example: 1
+        processValue:
+          type: string
+          example: Quote (Proposal / SPH / OBL)
+        process:
+          type: string
+          example: Quote
+    WinFactorList_data:
+      properties:
+        factorId:
+          type: integer
+        factor:
+          type: string
+    addLeadResponse_data:
+      type: object
+      properties:
+        projectId:
+          type: string
+          example: PRO-975059-9302302301
+        nik:
+          type: string
+          example: "920136"
+        fullName:
+          type: string
+          example: Sidik Hadiwijaya
+        role:
+          type: string
+          example: account_manager
+        userId:
+          type: string
+          example: "920136"
+        customerAccountName:
+          type: string
+          example: Lipo Plaza
+        customerAccountNumber:
+          type: string
+          example: "0004703302"
+        nipnas:
+          type: string
+          example: "1234"
+        segment:
+          type: string
+          example: ES BANKING MANAGEMENT SERVICES-1
+        pic:
+          type: array
+          example:
+          - name: Rizka Annisa
+            duty: AM
+            phoneNumber: "08181929182"
+          items:
+            type: string
+        projectTitle:
+          type: string
+          example: Pengadaan Barang dan Jasa
+        projectDescription:
+          type: string
+          example: Lorem ipsum
+        process:
+          type: string
+          example: Lead
+        createdAt:
+          type: string
+          example: 2020-02-27T06:51:53.452Z
+        updatedAt:
+          type: string
+          example: 2020-02-27T06:51:53.452Z
+        createdBy:
+          type: string
+          example: Rizka Annisa
+        updatedBy:
+          type: string
+          example: Hiya Hiya Hiya
+    summaryLead_data_customerInfo:
+      type: object
+      properties:
+        customerAccountName:
+          type: string
+          example: Lipo Plaza
+        customerAccountNumber:
+          type: string
+          example: "0004703302"
+        nipnas:
+          type: string
+          example: "1234"
+        segment:
+          type: string
+          example: ES BANKING MANAGEMENT SERVICES-1
+    summaryLead_data_projectInfo:
+      type: object
+      properties:
+        projectProcess:
+          type: string
+          example: Lead
+        projectTitle:
+          type: string
+          example: Pengadaan Barang dan Jasa Terkait dengan Kontrak dan Bisnis
+        projectDescription:
+          type: string
+          example: Pengadaan merupakan proses kegiatan untuk pemenuhan atau penyediaan
+            kebutuhan dan pasokan barang atau jasa di bawah kontrak atau pembelian
+            langsung untuk memenuhi kebutuhan bisnis. Pengadaan dapat mempengaruhi
+            keseluruhan proses arus barang karena merupakan bagian penting dalam proses
+            tersebut.
+    summaryLead_data:
+      type: object
+      properties:
+        projectId:
+          type: string
+          example: PRO-975059-9302302301
+        nik:
+          type: string
+          example: "920136"
+        role:
+          type: string
+          example: account manager
+        userId:
+          type: string
+          example: "920136"
+        customerInfo:
+          $ref: '#/components/schemas/summaryLead_data_customerInfo'
+        projectInfo:
+          $ref: '#/components/schemas/summaryLead_data_projectInfo'
+        activities:
+          type: array
+          example:
+          - activityId: ACT-975059-9302302301
+            activityStartDate: 2011-10-05T00:00:00.000Z
+            activityType: Kunjungan
+            activityNotes: sebuah ekspresi yang digunakan untuk membuat sebuah atau
+              beberapa perjanjian bertemu
+            activityPhotos:
+            - photoLink: https://q-xx.bstatic.com/images/hotel/max1024x768/116/116281465.jpg
+              photoName: DSC-19201.jpg
+          - activityId: ACT-975059-9302302301
+            activityStartDate: 2011-10-04T00:00:00.000Z
+            activityType: Rapat
+            activityNotes: sebuah ekspresi yang digunakan untuk membuat sebuah atau
+              beberapa perjanjian bertemu
+            activityPhotos:
+            - photoLink: https://q-xx.bstatic.com/images/hotel/max1024x768/116/116281465.jpg
+              photoName: DSC-19201.jpg
+          items:
+            $ref: '#/components/schemas/dataActivities'
+        pic:
+          type: array
+          example:
+          - picId: PIC-2081201
+            name: Rizka Annisa
+            duty: AM
+            phoneNumber: "08181929182"
+          - picId: PIC-2801291
+            name: Cindy Yudiah
+            duty: AM
+            phoneNumber: "08181929182"
+          items:
+            type: string
+    LeadUpdateResponse_data:
+      type: object
+      properties:
+        projectId:
+          type: string
+          example: PRO-975059-9302302301
+        nik:
+          type: string
+          example: "920136"
+        fullName:
+          type: string
+          example: Sidik Hadiwijaya
+        role:
+          type: string
+          example: account manager
+        userId:
+          type: string
+          example: "920136"
+        customerInfo:
+          $ref: '#/components/schemas/summaryLead_data_customerInfo'
+        projectInfo:
+          $ref: '#/components/schemas/summaryLead_data_projectInfo'
+        activities:
+          type: array
+          example:
+          - activityId: ACT-975059-9302302301
+            activityDate: 2020-02-27T00:00:00.000Z
+            activityStatus: Appointment
+            activityType: Done
+            activityDescription: sebuah ekspresi yang digunakan untuk membuat sebuah
+              atau beberapa perjanjian bertemu
+            activityPhotos:
+            - photoLink: https://q-xx.bstatic.com/images/hotel/max1024x768/116/116281465.jpg
+              photoName: DSC-19201.jpg
+          - activityId: ACT-975059-9302302301
+            activityDate: 2020-02-27T00:00:00.000Z
+            activityStatus: Appointment
+            activityType: Done
+            activityDescription: sebuah ekspresi yang digunakan untuk membuat sebuah
+              atau beberapa perjanjian bertemu
+            activityPhotos:
+            - photoLink: https://q-xx.bstatic.com/images/hotel/max1024x768/116/116281465.jpg
+              photoName: DSC-19201.jpg
+          items:
+            $ref: '#/components/schemas/dataActivities'
+        pic:
+          type: array
+          example:
+          - name: Rizka Annisa
+            duty: AM
+            phoneNumber: "08181929182"
+          - name: Cindy Yudiah
+            duty: AM
+            phoneNumber: "08181929182"
+          items:
+            type: string
+    ActivityList_data:
+      properties:
+        activityId:
+          type: string
+        projectId:
+          type: string
+        activityStartDate:
+          type: string
+        activityEndDate:
+          type: string
+        activityType:
+          type: string
+        activityNotes:
+          type: string
+    ActivityResponse_data:
+      type: object
+      properties:
+        activityId:
+          type: string
+          example: ACT-975059-9302302301
+        projectId:
+          type: string
+        nipnas:
+          type: integer
+          example: 0
+        customerAccountName:
+          type: string
+        segment:
+          type: string
+        activityStartDate:
+          type: string
+          example: 2011-10-05T00:00:00.000Z
+        activityEndDate:
+          type: string
+          example: 2011-10-05T00:00:00.000Z
+        activityType:
+          type: string
+          example: Appointment
+        activityNotes:
+          type: string
+          example: Lorem ipsum
+        activityPhotos:
+          type: array
+          example:
+          - photoName: MED-108202
+            photoLink: http://minio.com
+          - photoName: MED-108203
+            photoLink: http://minio.com
+          items:
+            $ref: '#/components/schemas/ProcessUpdateResponse_data_files'
+        createdAt:
+          type: string
+          example: 2019-09-02T09:17:56.533Z
+        updatedAt:
+          type: string
+          example: 2019-09-02T09:17:56.533Z
+        createdBy:
+          type: string
+          example: Rizka Annisa
+        updatedBy:
+          type: string
+          example: Hiya Hiya Hiya
+    ActivityUpdateResponse_data:
+      type: object
+      properties:
+        activityId:
+          type: string
+          example: ACT-975059-9302302301
+        projectId:
+          type: string
+        nipnas:
+          type: integer
+          example: 0
+        customerAccountName:
+          type: string
+        segment:
+          type: string
+        activityStartDate:
+          type: string
+          example: 2011-10-05T00:00:00.000Z
+        activityEndDate:
+          type: string
+          example: 2011-10-05T00:00:00.000Z
+        activityType:
+          type: string
+          example: Done
+        activityNotes:
+          type: string
+          example: Lorem ipsum
+        activityPhotos:
+          type: array
+          example:
+          - photoName: MED-108202
+            photoLink: http://minio.com
+          - photoName: MED-108203
+            photoLink: http://minio.com
+          items:
+            $ref: '#/components/schemas/ProcessUpdateResponse_data_files'
+        createdAt:
+          type: string
+          example: 2019-09-02T09:17:56.533Z
+        updatedAt:
+          type: string
+          example: 2019-09-02T09:17:56.533Z
+        createdBy:
+          type: string
+          example: Rizka Annisa
+        updatedBy:
+          type: string
+          example: Hiya Hiya Hiya
+    UploadFileResponse_data:
+      type: object
+      properties:
+        projectId:
+          type: string
+          example: PRO-123-123-123
+        docType:
+          type: string
+          example: Activity
+        fileId:
+          type: string
+          example: MED-108201
+        fileName:
+          type: string
+          example: PRE-123_1.jpg
+        fileUrl:
+          type: string
+          example: http://minio.com
+        fileSize:
+          type: string
+          example: 3.2 MB
+        fileUploadDate:
+          type: string
+          example: 2011-10-05T00:00:00.000Z
+    OpporResponse_data:
+      type: object
+      properties:
+        projectId:
+          type: string
+          example: PRO-975059-9302302301
+        nik:
+          type: string
+          example: "920136"
+        role:
+          type: string
+          example: account manager
+        userId:
+          type: string
+          example: "920136"
+        process:
+          type: string
+          example: Opportunity
+        projectTitle:
+          type: string
+          example: Pengadaan Barang
+        approachedBy:
+          type: string
+          example: General Manager
+        projectCharacteristic:
+          type: string
+          example: Baru
+        opportunityCategory:
+          type: string
+          example: Mahal
+        solutionCategory:
+          type: string
+          example: Beli Putus
+        confidenceWinning:
+          type: integer
+          example: 1
+        estimateValue:
+          type: integer
+          example: 280000000
+        estimateSubscribeStartDate:
+          type: string
+          example: 2011-10-05T00:00:00.000Z
+        estimateDeliveryPeriod:
+          type: integer
+          example: 2
+        estimateSubscribePeriod:
+          type: integer
+          example: 12
+        isPartner:
+          type: boolean
+          example: true
+        projectDescription:
+          type: string
+          example: Lorem ipsum dolor opportunity
+        opportunityFiles:
+          type: array
+          example:
+          - fileId: MED-108201
+            fileName: OPR-123_1.pdf"
+            fileUrl: http://minio.com
+          items:
+            $ref: '#/components/schemas/ProcessUpdateResponse_data_files'
+        createdAt:
+          type: string
+          example: 2019-09-02T09:17:56.533Z
+        updatedAt:
+          type: string
+          example: 2019-09-02T09:17:56.533Z
+        createdBy:
+          type: string
+          example: Rizka Annisa
+        updatedBy:
+          type: string
+          example: Hiya Hiya Hiya
+    OpporList_data:
+      properties:
+        projectId:
+          type: string
+        lopId:
+          type: string
+        customerAccountName:
+          type: string
+        nipnas:
+          type: integer
+        createdAt:
+          type: string
+        updatedAt:
+          type: string
+    OpporDetail_data_customerInfo:
+      type: object
+      properties:
+        customerAccountName:
+          type: string
+          example: Lipo Plaza
+        customerAccountNumber:
+          type: string
+          example: "0004703302"
+        nipnas:
+          type: string
+          example: "1234"
+        segment:
+          type: string
+          example: ES BANKING MANAGEMENT SERVICES-1
+        pic:
+          type: array
+          example:
+          - picId: PIC-1209201
+            name: Rizka Annisa
+            duty: AM
+            phoneNumber: "08181929182"
+          items:
+            type: string
+    OpporDetail_data_projectInfo_estimateDeliveryPeriod:
+      type: object
+      properties:
+        month:
+          type: integer
+          example: 1
+        day:
+          type: integer
+          example: 7
+    OpporDetail_data_projectInfo:
+      type: object
+      properties:
+        projectProcess:
+          type: string
+          example: Opportunity
+        projectTitle:
+          type: string
+          example: Pengadaan Barang dan Jasa
+        solutionCategory:
+          type: string
+          example: Payment Services
+        percentWinning:
+          type: integer
+          example: 10
+        termOfPayment:
+          type: string
+          example: OTC Prepaid
+        estimateOTCPrepaidValue:
+          type: integer
+          example: 280000000
+        estimateSubscribeStartDate:
+          type: string
+          example: 2011-10-05T00:00:00.000Z
+        estimateDeliveryPeriod:
+          $ref: '#/components/schemas/OpporDetail_data_projectInfo_estimateDeliveryPeriod'
+        isIncludeDelivery:
+          type: boolean
+          example: true
+        estimateSubscribePeriod:
+          type: integer
+          example: 12
+        estimateValue:
+          type: integer
+          example: 280000000
+        isPartner:
+          type: boolean
+          example: false
+        contractCategory:
+          type: string
+          example: Own Channel
+        projectDescription:
+          type: string
+          example: Lorem ipsum
+        opportunityFiles:
+          type: array
+          example:
+          - fileId: MED-108201
+            fileName: OPR-123_1.pdf"
+            fileUrl: http://minio.com
+          items:
+            $ref: '#/components/schemas/ProcessUpdateResponse_data_files'
+    OpporDetail_data_updatedBy:
+      type: object
+      properties:
+        date:
+          type: string
+          example: 2020-02-27T06:51:53.452Z
+        fullName:
+          type: string
+          example: Sidik Hadiwijaya
+        nik:
+          type: string
+          example: "975059"
+        role:
+          type: string
+          example: account_manager
+        userId:
+          type: string
+          example: "02810201"
+    OpporDetail_data:
+      type: object
+      properties:
+        projectId:
+          type: string
+          example: PRO-975059-9302302301
+        nik:
+          type: string
+          example: "920136"
+        role:
+          type: string
+          example: account manager
+        userId:
+          type: string
+          example: "920136"
+        customerInfo:
+          $ref: '#/components/schemas/OpporDetail_data_customerInfo'
+        projectInfo:
+          $ref: '#/components/schemas/OpporDetail_data_projectInfo'
+        activities:
+          type: array
+          example:
+          - activityId: ACT-975059-9302302301
+            activityStartDate: 2020-02-27T00:00:00.000Z
+            activityType: Appointment
+            activityNotes: Lorem ipsum
+            activityPhotos:
+            - fileId: MED-108201
+              fileName: image01.jpg
+              fileUrl: https://i0.wp.com/www.margaapsari.com/app/uploads/2019/07/Kintan-Buffet-Shaburi-Halal-05.jpg
+            - fileId: MED-108202
+              fileName: image02.jpg
+              fileUrl: https://reseponline.info/wp-content/uploads/2016/06/Resep-Masakan-Kepiting-Saus-Tiram-Yang-Bisa-Dicoba.jpg
+            - fileId: MED-108203
+              fileName: image03.jpg
+              fileUrl: https://www.masakapahariini.com/wp-content/uploads/2019/04/SOTO-MADURA.jpg
+            - fileId: MED-108204
+              fileName: image04.jpg
+              fileUrl: https://cdn2.tstatic.net/manado/foto/bank/images/pempek-palembang-2563.jpg
+            - fileId: MED-108205
+              fileName: image05.jpg
+              fileUrl: https://assets.klikindomaret.com/share/20032366_1.jpg
+          - activityId: ACT-975059-9302302301
+            activityStartDate: 2020-02-27T00:00:00.000Z
+            activityType: Rapat
+            activityNotes: Lorem ipsum
+            activityPhotos:
+            - fileId: MED-208201
+              fileName: image01.jpg
+              fileUrl: https://pmcvariety.files.wordpress.com/2019/09/nz-fjords-shutterstock.jpg
+            - fileId: MED-208202
+              fileName: image02.jpg
+              fileUrl: https://lp-cms-production.imgix.net/2019-06/09a64fea2933f6da77ab07d671d1f678-south-korea.jpg
+          items:
+            $ref: '#/components/schemas/dataActivities'
+        createdAt:
+          type: string
+          example: 2020-02-27T06:51:53.452Z
+        updatedAt:
+          type: string
+          example: 2020-02-27T06:51:53.452Z
+        createdBy:
+          type: string
+          example: Rizka Annisa
+        updatedBy:
+          $ref: '#/components/schemas/OpporDetail_data_updatedBy'
+    OpporUpdateResponse_data:
+      type: object
+      properties:
+        projectId:
+          type: string
+          example: PRO-975059-9302302301
+        nik:
+          type: string
+          example: "920136"
+        role:
+          type: string
+          example: account manager
+        userId:
+          type: string
+          example: "920136"
+        process:
+          type: string
+          example: Opportunity
+        projectTitle:
+          type: string
+          example: Pengadaan Barang
+        solutionCategory:
+          type: string
+          example: Beli Putus
+        percentWinning:
+          type: integer
+          example: 10
+        termOfPayment:
+          type: string
+          example: OTC Prepaid
+        estimateOTCPrepaidValue:
+          type: integer
+          example: 280000000
+        estimateSubscribeStartDate:
+          type: string
+          example: 2011-10-05T00:00:00.000Z
+        estimateDeliveryPeriod:
+          type: integer
+          example: 2
+        estimateSubscribePeriod:
+          type: integer
+          example: 12
+        estimateValue:
+          type: integer
+          example: 280000000
+        contractCategory:
+          type: string
+          example: Own Channel
+        projectDescription:
+          type: string
+          example: Lorem ipsum dolor opportunity
+        opportunityFiles:
+          type: array
+          example:
+          - fileId: MED-108201
+            fileName: OPR-123_1.pdf"
+            fileUrl: http://minio.com
+          items:
+            $ref: '#/components/schemas/ProcessUpdateResponse_data_files'
+        createdAt:
+          type: string
+          example: 2019-09-02T09:17:56.533Z
+        updatedAt:
+          type: string
+          example: 2019-09-02T09:17:56.533Z
+        createdBy:
+          type: string
+          example: Rizka Annisa
+        updatedBy:
+          type: string
+          example: Hiya Hiya Hiya
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
